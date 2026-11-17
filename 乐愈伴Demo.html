@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eef3eb">
+  <meta name="description" content="乐愈伴 · 畅春园社区零基础音乐编创陪伴。单文件离线演示。">
+  <title>乐愈伴 · 把心情轻轻唱出来</title>
+  <style>
+    :root { --ink:#293e37; --muted:#526158; --green:#345e4d; --green-dark:#284c3d; --sage:#eaf0e7; --cream:#f7f7f1; --line:#d6dfd0; --orange:#99532f; --white:#fffefa; --font:24px; --control:22px; --label:20px; --shadow:0 6px 28px #3c50350a; }
+    * { box-sizing:border-box; }
+    [hidden] { display:none!important; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--cream); color:var(--ink); font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif; font-size:var(--font); line-height:1.65; -webkit-font-smoothing:antialiased; }
+    button,input,textarea { font:inherit; }
+    button { cursor:pointer; -webkit-tap-highlight-color:transparent; }
+    button:disabled { cursor:default; opacity:.5; }
+    button:focus-visible,textarea:focus-visible,summary:focus-visible,a:focus-visible { outline:3px solid #c67a45; outline-offset:4px; }
+    button { touch-action:manipulation; }
+    svg { display:block; }
+    .icon { width:24px; height:24px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; flex:none; }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    .page { width:min(1360px,calc(100% - 72px)); margin:auto; }
+    .topbar { display:flex; align-items:center; justify-content:space-between; gap:20px; min-height:102px; border-bottom:1px solid var(--line); }
+    .brand { display:flex; gap:13px; align-items:center; }
+    .brandmark { width:50px; height:50px; border-radius:17px; background:var(--green); color:#fff; display:grid; place-items:center; }
+    .brandmark .icon { width:31px; height:31px; }
+    .brandname { font-size:29px; font-weight:700; letter-spacing:2px; line-height:1.25; }
+    .brand-sub { font-size:14px; color:var(--muted); letter-spacing:1px; margin-top:4px; }
+    .top-actions { display:flex; align-items:center; gap:12px; }
+    .quiet-btn { border:1px solid var(--line); background:var(--white); color:var(--green); border-radius:12px; min-height:46px; padding:8px 15px; display:inline-flex; align-items:center; justify-content:center; gap:8px; font-size:16px; }
+    .quiet-btn:hover { background:#eaf0e7; border-color:#abbcab; }
+    .local-pill { display:flex; align-items:center; gap:8px; font-size:14px; color:var(--muted); margin-right:8px; }
+    .dot { width:7px; height:7px; border-radius:50%; background:#6d8b67; display:inline-block; flex:none; }
+    .hero { display:flex; justify-content:space-between; align-items:center; gap:32px; padding:30px 4px 27px; min-height:184px; }
+    .eyebrow { color:var(--orange); font-size:15px; letter-spacing:2px; font-weight:600; margin:0 0 8px; }
+    h1 { font-family:"Songti SC","STSong","SimSun",serif; font-size:clamp(29px,3vw,40px); letter-spacing:1px; font-weight:600; line-height:1.45; margin:0 0 9px; }
+    .hero p:last-child { margin:0; color:var(--muted); font-size:18px; }
+    .hero-art { width:290px; height:140px; flex:none; }
+    .workspace { display:grid; grid-template-columns:minmax(0,1fr) 330px; gap:24px; align-items:start; }
+    .panel { background:var(--white); border:1px solid var(--line); border-radius:22px; box-shadow:var(--shadow); overflow:hidden; }
+    .chat-header { padding:20px 26px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    .chat-title { display:flex; align-items:center; gap:10px; }
+    h2 { margin:0; font-size:21px; font-weight:600; }
+    .chat-sub { color:var(--muted); font-size:14px; }
+    .chat-body { height:414px; overflow:auto; overscroll-behavior:contain; padding:25px 26px; scrollbar-color:#cad6c6 transparent; scrollbar-width:thin; }
+    .welcome { padding:2px 0 0; }
+    .assistant-intro { display:flex; align-items:center; gap:9px; font-size:15px; color:var(--green); margin-bottom:13px; }
+    .tiny-avatar { width:30px; height:30px; border-radius:10px; background:var(--sage); display:grid; place-items:center; color:var(--green); }
+    .tiny-avatar .icon { width:19px; height:19px; }
+    .welcome h3 { font-family:"Songti SC","SimSun",serif; font-size:26px; font-weight:600; margin:0 0 9px; }
+    .welcome-copy { margin:0; color:#56675c; font-size:20px; line-height:1.85; }
+    .start-label { font-size:15px; color:var(--muted); margin:22px 0 11px; }
+    .starters { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+    .starter { text-align:left; border:1px solid var(--line); background:#f7f8f3; color:var(--ink); border-radius:14px; padding:14px 13px; min-height:108px; transition:background .15s,transform .15s; }
+    .starter:hover { background:#edf2e8; transform:translateY(-2px); }
+    .starter .icon { margin-bottom:8px; color:#648064; width:26px; height:26px; }
+    .starter span { display:block; font-size:18px; font-weight:500; }
+    .starter small { display:block; color:var(--muted); font-size:14px; margin-top:3px; }
+    .message { margin:0 0 23px; animation:arrive .2s ease-out; }
+    @keyframes arrive { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
+    .user-message { display:flex; flex-direction:column; align-items:flex-end; gap:5px; }
+    .user-bubble { background:#e8eee3; border-radius:17px 17px 4px 17px; padding:12px 18px; max-width:90%; white-space:pre-wrap; overflow-wrap:anywhere; }
+    .message-label { font-size:13px; color:var(--muted); }
+    .reply { border:1px solid var(--line); border-radius:4px 18px 18px; padding:21px 22px; background:#fffefa; }
+    .reply-section + .reply-section { margin-top:15px; }
+    .reply-section h3 { font-size:16px; color:var(--green); margin:0 0 4px; font-weight:600; }
+    .reply-section p { margin:0; font-size:var(--font); line-height:1.8; white-space:pre-wrap; overflow-wrap:anywhere; }
+    .chords { display:flex; align-items:center; flex-wrap:wrap; gap:9px; padding:4px 0; }
+    .chord { background:#eef2e9; color:#345b44; border:1px solid #dce5d5; border-radius:9px; min-width:48px; padding:3px 12px; text-align:center; font-weight:600; font-size:24px; }
+    .chord-arrow { color:#8a9987; font-size:17px; }
+    .reply-section:last-child { background:#f4f2e9; border-radius:12px; padding:12px 15px; }
+    .reply-meta { margin:10px 0 0; display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-size:13px; color:var(--muted); }
+    .feedback-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+    .feedback-btn { border:1px solid var(--line); border-radius:999px; background:var(--white); padding:7px 12px; min-height:42px; color:var(--green); font-size:15px; }
+    .feedback-btn:hover { background:var(--sage); }
+    .system-message { border-left:3px solid #9aac92; padding:8px 12px; background:#f4f6ef; border-radius:0 9px 9px 0; font-size:17px; color:#4f6456; }
+    .composer { border-top:1px solid var(--line); background:#fcfcf8; padding:18px 24px 17px; }
+    .composer-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:9px; }
+    .composer label { font-size:16px; color:#59685b; }
+    #charCount { font-size:13px; color:var(--muted); }
+    textarea { display:block; width:100%; height:90px; min-height:90px; max-height:190px; resize:vertical; border:1px solid #ced8c8; border-radius:12px; background:white; color:var(--ink); padding:13px 15px; font-size:20px; line-height:1.55; }
+    textarea::placeholder { color:#788275; }
+    .composer-actions { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px; }
+    .action-group { display:flex; gap:9px; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:50px; border:1px solid #c8d5c0; border-radius:12px; padding:10px 15px; background:var(--sage); color:var(--green); font-size:18px; white-space:nowrap; }
+    .btn:hover:not(:disabled) { background:#dfe9d8; }
+    .btn-primary { background:var(--green); border-color:var(--green); color:#fff; padding-inline:23px; }
+    .btn-primary:hover:not(:disabled) { background:var(--green-dark); }
+    .btn-white { background:var(--white); }
+    .composer-note { margin:10px 0 0; color:var(--muted); font-size:13px; display:flex; align-items:center; gap:6px; }
+    .composer-note .icon { width:15px; height:15px; }
+    .sidebar { display:grid; gap:20px; }
+    .works-panel { padding:22px; }
+    .section-heading { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+    .section-heading h2 { display:flex; align-items:center; gap:8px; font-size:20px; }
+    .count { background:var(--sage); border-radius:8px; padding:0 9px; font-size:14px; color:var(--green); }
+    .section-note { color:var(--muted); font-size:14px; margin:7px 0 0; }
+    .empty-works { text-align:center; padding:26px 0 20px; }
+    .empty-art { width:70px; height:70px; background:#f2f2e7; border-radius:50%; display:grid; place-items:center; margin:0 auto 13px; color:#8b987c; }
+    .empty-art .icon { width:36px; height:36px; }
+    .empty-works p { font-size:17px; margin:0; color:#607057; }
+    .empty-works small { color:var(--muted); font-size:14px; display:block; margin-top:5px; }
+    .work-list { max-height:320px; overflow:auto; margin-top:13px; scrollbar-width:thin; }
+    .work-item { border:1px solid var(--line); border-radius:13px; padding:13px 14px; margin-bottom:10px; background:#fcfcf7; }
+    .work-item h3 { margin:0 0 5px; font-size:18px; overflow-wrap:anywhere; }
+    .work-info { display:flex; justify-content:space-between; gap:8px; font-size:13px; color:var(--muted); }
+    .work-actions { margin-top:10px; display:flex; gap:7px; }
+    .work-actions button { padding:6px 10px; min-height:42px; background:var(--white); border:1px solid #d4decf; border-radius:8px; color:var(--green); font-size:15px; }
+    .work-actions button:hover { background:#e9f0e4; }
+    .clear-btn { display:flex; align-items:center; justify-content:center; gap:7px; width:100%; background:transparent; color:#6d7369; border:0; border-top:1px solid var(--line); font-size:15px; min-height:47px; padding-top:13px; margin-top:10px; }
+    .clear-btn:hover { color:#9f4b32; }
+    .clear-btn .icon { width:17px; height:17px; }
+    .ambience { padding:22px; background:#edf1e7; border-color:#dfe6d8; position:relative; }
+    .ambience h2 { font-size:20px; display:flex; align-items:center; gap:8px; }
+    .ambience .kicker { font-size:12px; letter-spacing:1px; color:#64745e; }
+    .scene-landscape { height:72px; width:100%; margin:9px 0 12px; }
+    .scene-tabs { display:flex; flex-wrap:wrap; gap:7px; }
+    .scene-tab { background:#f8faf3; border:1px solid #d5ddcc; color:#5a6b50; border-radius:9px; min-height:42px; padding:6px 10px; font-size:15px; }
+    .scene-tab[aria-pressed="true"] { color:#fff; background:var(--green); border-color:var(--green); }
+    #sceneGuide { margin:13px 0 5px; font-size:17px; color:#4c6245; line-height:1.8; }
+    .scene-note { font-size:12px; color:#61705c; margin:6px 0 0; }
+    .footer { display:flex; align-items:center; justify-content:space-between; gap:14px; padding:21px 2px 25px; color:var(--muted); font-size:13px; }
+    .footer span:first-child { display:flex; align-items:center; gap:6px; }
+    .footer .icon { width:16px; height:16px; }
+    #toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%); max-width:min(90vw,700px); background:#2c4a3a; color:#fff; padding:13px 22px; border-radius:13px; box-shadow:0 6px 24px #25332525; font-size:18px; z-index:50; text-align:center; }
+    #toast[hidden] { display:none; }
+    dialog { border:1px solid #d8e1d1; border-radius:23px; color:var(--ink); background:var(--white); box-shadow:0 24px 100px #21332330; padding:0; width:min(680px,calc(100vw - 32px)); max-height:85dvh; }
+    dialog::backdrop { background:#23382760; backdrop-filter:blur(3px); }
+    .dialog-top { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:20px 24px; border-bottom:1px solid var(--line); }
+    .close-btn { background:#eff2e9; border:0; border-radius:50%; width:44px; height:44px; color:var(--green); display:grid; place-items:center; flex:none; }
+    .dialog-body { padding:21px 24px 26px; font-size:18px; }
+    .dialog-body p:first-child { margin-top:0; }
+    .dialog-body p:last-child { margin-bottom:0; }
+    .voice-choice { display:block; text-align:left; width:100%; border:1px solid var(--line); border-radius:13px; background:#f5f7ee; color:var(--ink); padding:15px 17px; margin-top:11px; font-size:19px; }
+    .voice-choice:hover { background:#e9f0e3; }
+    .voice-choice small { display:block; color:var(--muted); font-size:14px; margin-bottom:3px; }
+    .demo-tag { background:#f3ebda; color:#86592d; border-radius:7px; padding:3px 8px; font-size:13px; }
+    .step-list { padding-left:24px; }
+    .step-list li { margin:9px 0; }
+    .notice { background:#f0f4e9; border-radius:12px; padding:13px 16px; font-size:16px; color:#52634b; }
+    .demo-heading { font-size:18px; margin:23px 0 10px; }
+    .retrieval { margin:0; background:#f3f5ed; border-radius:12px; padding:14px 16px; font-size:15px; white-space:pre-wrap; overflow-wrap:anywhere; }
+    details { border-top:1px solid var(--line); padding-top:14px; margin-top:18px; }
+    summary { cursor:pointer; font-size:17px; color:var(--green); min-height:44px; }
+    #promptContent { white-space:pre-wrap; font-family:inherit; font-size:14px; line-height:1.8; max-height:320px; overflow:auto; background:#f4f5ef; padding:15px; border-radius:10px; }
+    .large-type { --font:24px; }
+    .large-type .welcome-copy,.large-type textarea,.large-type .btn,.large-type .voice-choice { font-size:23px; }
+    .large-type .reply-section h3 { font-size:20px; }
+    .large-type .starter span,.large-type .work-item h3,.large-type #sceneGuide { font-size:21px; }
+    .large-type .chat-body { height:470px; }
+    @media(min-width:1500px) { .chat-body { height:460px; } }
+    @media(max-width:1100px) { .page{width:calc(100% - 40px)} .workspace{grid-template-columns:minmax(0,1fr) 290px;gap:16px} .chat-header,.chat-body{padding-left:20px;padding-right:20px} .composer{padding:16px 18px} .btn{padding:10px 12px;font-size:16px} .hero-art{width:230px} .starter{padding:12px 9px} .starter span{font-size:16px} .works-panel,.ambience{padding:18px} .chat-sub{display:none} }
+    @media(max-width:850px) { .workspace{grid-template-columns:1fr} .sidebar{grid-template-columns:1fr 1fr;align-items:start} .chat-body{height:410px} .hero-art{width:200px;height:120px} .local-pill{display:none} .hero{padding-top:25px} .btn{font-size:18px} .starter span{font-size:18px} }
+    @media(max-width:560px) { .page{width:calc(100% - 28px)} .topbar{min-height:88px;gap:10px} .brandmark{width:43px;height:43px;border-radius:14px} .brand{gap:9px} .brandname{font-size:24px} .brand-sub{font-size:11px;letter-spacing:0} .top-actions{gap:7px} .quiet-btn{padding:7px 10px;font-size:14px;min-height:44px} .top-actions .icon{display:none} .hero{padding:24px 2px 23px;min-height:0} .hero-art{display:none} h1{font-size:29px;letter-spacing:0} .hero p:last-child{font-size:16px} .eyebrow{font-size:13px} .chat-header{padding:17px 16px} h2{font-size:19px} .chat-body{padding:21px 15px;height:400px} .welcome h3{font-size:24px} .welcome-copy{font-size:19px} .starters{gap:7px} .starter{min-height:102px;padding:11px 8px} .starter span{font-size:16px} .starter small{font-size:12px} .starter .icon{width:23px;height:23px} .composer{padding:15px 14px} .composer-actions{flex-wrap:wrap;gap:10px} .action-group{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:9px} #sendBtn{width:100%} .btn{min-height:49px;font-size:17px} .sidebar{grid-template-columns:1fr} .footer{flex-direction:column;gap:7px;align-items:flex-start;font-size:12px} .reply{padding:17px 15px} .reply-section p{font-size:var(--font)} .dialog-top{padding:17px 18px} .dialog-body{padding:19px 18px;font-size:17px} .large-type .btn{font-size:19px} .large-type .starter span{font-size:18px} }
+    @media(prefers-reduced-motion:reduce) { *{scroll-behavior:auto!important;animation:none!important;transition:none!important} }
+    /* 适老版：默认大字；小屏也保留阅读字号，不依靠浏览器缩放。 */
+    body { line-height:1.8; }
+    .large-type { --font:28px; --control:26px; --label:24px; }
+    .brand-sub,.local-pill,.eyebrow,.section-note,.chat-sub,.start-label,.composer-note,.message-label,.reply-meta,.work-info,.scene-note,.footer,.kicker,.demo-tag { font-size:18px; line-height:1.65; }
+    .hero p:last-child,.welcome-copy,.large-type .welcome-copy { font-size:var(--font); }
+    .quiet-btn,.btn,.large-type .btn,.feedback-btn,.scene-tab,.work-actions button,.clear-btn { font-size:var(--control); min-height:58px; padding:10px 16px; }
+    .brandname { font-size:32px; }
+    h2,.section-heading h2,.ambience h2 { font-size:26px; line-height:1.5; }
+    .chat-header { flex-wrap:wrap; }
+    .welcome h3 { font-size:29px; }
+    .chat-body { height:480px; padding:26px; }
+    .large-type .chat-body { height:540px; }
+    .reply-section h3,.large-type .reply-section h3 { font-size:var(--label); }
+    .reply-section p,.large-type .reply-section p { line-height:1.95; }
+    .reply-section + .reply-section { margin-top:22px; }
+    .reply { padding:25px; }
+    .reply-section:last-child { padding:16px; }
+    .composer-head { align-items:flex-start; }
+    .composer label { font-size:var(--label); }
+    #charCount { font-size:17px; white-space:nowrap; }
+    textarea,.large-type textarea { height:116px; min-height:116px; font-size:var(--font); padding:14px 16px; }
+    .composer-actions { flex-wrap:wrap; }
+    .action-group { flex-wrap:wrap; }
+    .composer-note .icon { width:20px; height:20px; }
+    .composer-note { align-items:flex-start; gap:9px; }
+    .starter span,.large-type .starter span { font-size:var(--control); }
+    .starter small { font-size:18px; }
+    .starter { padding:16px; }
+    .starters { grid-template-columns:1fr; }
+    .starter .icon { float:left; margin:6px 16px 6px 0; }
+    .starter span,.starter small { margin-left:42px; }
+    .starter { min-height:90px; }
+    .work-item h3,.large-type .work-item h3 { font-size:var(--control); }
+    .work-info { flex-wrap:wrap; }
+    .work-actions { flex-wrap:wrap; }
+    .empty-works p,.empty-works small,#sceneGuide,.large-type #sceneGuide { font-size:var(--label); }
+    .work-list { max-height:420px; }
+    .voice-choice,.large-type .voice-choice,.dialog-body { font-size:var(--font); }
+    .voice-choice small,.notice,.demo-heading,summary { font-size:var(--label); }
+    .close-btn { width:54px; height:54px; }
+    .dialog-top { position:sticky; top:0; background:var(--white); z-index:2; }
+    #promptContent,.retrieval { font-size:18px; }
+    .footer { flex-wrap:wrap; }
+    .assistant-intro { font-size:20px; }
+    .system-message,#toast { font-size:var(--control); }
+    .count { font-size:20px; }
+    .guide-launch { display:flex; align-items:center; gap:18px; padding:21px 24px; margin-bottom:24px; border:1px solid #c8d7bd; border-radius:20px; background:#edf3e6; }
+    .guide-avatar { width:64px; height:64px; border-radius:20px; flex:none; background:#d9e6ce; color:var(--green); display:grid; place-items:center; }
+    .guide-avatar .icon { width:34px; height:34px; }
+    .guide-intro { flex:1; min-width:0; }
+    .guide-intro h2 { margin-bottom:3px; }
+    .guide-intro p { margin:0; font-size:20px; color:#485f40; }
+    .guide-start-actions { display:flex; flex-direction:column; align-items:stretch; gap:8px; }
+    .text-guide-btn { background:none; border:0; min-height:48px; font-size:19px; color:var(--green); text-decoration:underline; text-underline-offset:4px; }
+    .guide-on { padding-bottom:280px; }
+    .coach-dock { position:fixed; bottom:14px; left:50%; transform:translateX(-50%); width:min(1220px,calc(100% - 32px)); z-index:30; border:2px solid #7f9772; border-radius:20px; background:#fffef9; box-shadow:0 8px 44px #2a41222e; padding:17px 22px; }
+    .coach-dock[hidden] { display:none; }
+    .coach-top { display:flex; gap:10px; align-items:center; margin-bottom:6px; }
+    .coach-step { font-size:19px; color:var(--green); font-weight:700; flex:1; }
+    .coach-close { background:transparent; border:1px solid #b9c9b0; border-radius:9px; min-height:48px; font-size:18px; color:var(--green); padding:7px 12px; }
+    .coach-caption { font-size:var(--font); font-weight:500; line-height:1.65; margin:0 0 13px; }
+    .coach-bottom { display:flex; flex-wrap:wrap; align-items:center; gap:12px; }
+    .coach-actions { display:flex; flex-wrap:wrap; gap:9px; }
+    .coach-actions .btn { min-height:54px; }
+    .speech-state { display:flex; align-items:center; gap:8px; flex:1; min-width:120px; font-size:18px; color:#586b4d; }
+    .speech-state[data-state="speaking"] .dot { background:#2c6941; box-shadow:0 0 0 4px #e0edd7; }
+    .speech-state[data-state="unavailable"] { color:#7a5734; }
+    .rate-control { display:flex; align-items:center; gap:6px; font-size:18px; }
+    .rate-control select { font:inherit; color:var(--green); min-height:50px; padding:7px 10px; border:1px solid #bdcdb3; border-radius:9px; background:#f6f8f1; max-width:145px; }
+    select:focus-visible { outline:3px solid #995b1d; outline-offset:3px; }
+    .guide-target { position:relative; outline:4px solid #bd751c!important; outline-offset:5px; box-shadow:0 0 0 9px #fff0c8!important; scroll-margin-block:60px 300px; }
+    .guide-target::after { content:attr(data-guide-label); position:absolute; z-index:3; top:-22px; left:8px; border-radius:7px; padding:2px 9px; background:#7c5118; color:white; font-size:18px; line-height:1.55; font-weight:600; white-space:nowrap; pointer-events:none; }
+    .reply-section.guide-target { border-radius:8px; padding:14px; margin-block:28px; }
+    .guide-target:focus-visible { outline-color:#8e5011!important; }
+    .dialog-coach { display:none; padding:17px 20px; background:#edf3e6; border-bottom:1px solid #d4dfcb; }
+    .guide-on .dialog-coach { display:block; }
+    .dialog-coach p { margin:0 0 12px; font-size:var(--font); }
+    .dialog-coach-actions { display:flex; flex-wrap:wrap; gap:9px; }
+    .dialog-coach .btn { font-size:20px; }
+    .dialog-coach-status { margin:8px 0 0; font-size:18px; }
+    .has-guide-modal .coach-dock { visibility:hidden; }
+    .read-btn { background:#eff4e8; border:1px solid #c4d2bb; color:var(--green); min-height:56px; padding:9px 16px; border-radius:12px; font-size:var(--control); display:inline-flex; align-items:center; gap:8px; margin-top:16px; }
+    .read-btn:hover { background:#e4efda; }
+    #guideStartBtn[aria-pressed="true"] { background:#dfe9d7; border-color:#a8bd99; color:var(--green); }
+    @media(min-width:851px) { .workspace{grid-template-columns:minmax(0,1fr) 360px} }
+    @media(min-width:1200px) { .starters{grid-template-columns:repeat(3,minmax(0,1fr))} .starter .icon{float:none;margin:0 0 8px} .starter span,.starter small{margin-left:0} }
+    @media(max-width:1100px) { .topbar{flex-wrap:wrap;padding-block:18px} .top-actions{margin-left:auto} .hero-art{width:190px} .chat-header,.chat-body{padding-inline:22px} .hero p:last-child{font-size:var(--font)} .chat-sub{display:none} }
+    @media(max-width:850px) { .guide-launch{flex-wrap:wrap} .guide-start-actions{flex-direction:row;align-items:center;width:100%} .guide-start-actions .btn{flex:1} .coach-bottom{gap:10px} .coach-actions{width:100%} .coach-actions .btn{flex:1} .hero-art{display:none} .hero{padding-block:24px} .top-actions{margin-left:0} }
+    @media(max-width:560px) {
+      .page{width:calc(100% - 28px)} .topbar{gap:14px;padding-block:17px} .top-actions{width:100%;gap:10px} .top-actions .quiet-btn{flex:1;font-size:var(--control);min-height:56px} .brandname{font-size:30px} .brand-sub{font-size:17px} .eyebrow{font-size:18px;letter-spacing:0} h1{font-size:31px} .hero p:last-child{font-size:var(--font)}
+      .guide-launch{padding:19px 16px;gap:13px} .guide-avatar{width:50px;height:50px;border-radius:15px} .guide-intro h2{font-size:25px} .guide-intro p{font-size:20px} .guide-start-actions{flex-direction:column;align-items:stretch} .text-guide-btn{font-size:20px} .guide-start-actions .btn{white-space:normal;line-height:1.5}
+      .chat-header{padding:18px} h2,.section-heading h2,.ambience h2{font-size:25px} .chat-body{height:490px;padding:23px 18px} .large-type .chat-body{height:550px} .welcome h3{font-size:28px} .welcome-copy,.large-type .welcome-copy{font-size:var(--font)} .starters{grid-template-columns:1fr;gap:13px} .starter span,.large-type .starter span{font-size:var(--control)} .starter small{font-size:18px} .starter{padding:14px;min-height:88px} .starter .icon{float:left;margin:7px 12px 6px 0}
+      .composer-head{display:block} #charCount{display:block;margin-top:4px} .composer{padding:18px} .action-group{grid-template-columns:1fr} .btn,.large-type .btn{font-size:var(--control);min-height:60px;white-space:normal;line-height:1.5} .composer-actions #sendBtn{min-height:64px} .composer-note{font-size:18px} .reply{padding:21px 16px} .reply-section p{font-size:var(--font)} .voice-choice small{font-size:20px} .voice-choice,.large-type .voice-choice{font-size:var(--font)} .footer{font-size:18px} .sidebar{gap:22px}
+      .coach-dock{bottom:8px;width:calc(100% - 16px);padding:13px;border-radius:16px} .coach-top{margin-bottom:8px} .coach-step{font-size:18px} .coach-caption{font-size:22px;line-height:1.6;margin-bottom:10px} .large-type .coach-caption{font-size:25px} .coach-actions{gap:7px;display:grid;grid-template-columns:1fr 1fr 1fr} .coach-actions .btn{font-size:19px;min-height:54px;padding:8px 6px} .coach-actions .btn-primary{grid-column:1/-1} .coach-close{font-size:18px} .speech-state{font-size:17px} .rate-control{font-size:17px} .rate-control select{max-width:118px} .guide-on{padding-bottom:390px} .guide-target{scroll-margin-block:50px 400px}
+      .dialog-coach{padding:16px} .dialog-top{padding:16px;gap:10px} .dialog-top h2{font-size:24px} .dialog-body{padding:20px 18px} .section-note{font-size:18px} .work-actions button{font-size:var(--control)}
+    }
+    .guide-on { padding-bottom:var(--guide-clearance,360px); }
+    .guide-on .voice-choice { margin-top:25px; }
+    #sendBtn.guide-target::after,[data-resume-work].guide-target::after { left:auto;right:0; }
+    @media(max-width:560px) { .coach-dock{max-height:60dvh;overflow-y:auto} .coach-actions{grid-template-columns:repeat(3,minmax(0,1fr))} .coach-actions .btn-primary{grid-column:auto} .coach-actions.with-locate .btn-primary{grid-column:1/-1} }
+    dialog { max-width:calc(100% - 24px); }
+    .dialog-coach-actions { display:grid;grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .dialog-coach .btn,.large-type .dialog-coach .btn { font-size:20px;min-height:52px;padding:8px 6px; }
+    .guide-on #voiceDialog .dialog-body > p:first-child { display:none; }
+    #voiceDialog .dialog-body > .section-note { margin:0 0 14px; }
+
+    /* 知识学习、伴奏选择与人工兜底：沿用大字和单步操作。 */
+    .help-ribbon { display:flex; flex-wrap:wrap; gap:12px; align-items:center; padding:0 0 24px; }
+    .help-ribbon .btn { flex:1; min-width:190px; }
+    .human-btn { color:#78431e; background:#fff0d9; border:1px solid #c89b66; }
+    .help-ribbon .human-btn { border-width:2px; }
+    .learn-links { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+    .choice-panel { margin-top:18px; border-top:1px solid var(--line); padding-top:18px; }
+    .choice-panel p,.choice-panel small { font-size:var(--label); line-height:1.65; }
+    .choice-panel > p { margin:0 0 12px; }
+    .arrangement-options { display:grid; gap:12px; }
+    .arrangement-choice { display:block; width:100%; text-align:left; border:2px solid #cfdbca; border-radius:14px; color:var(--ink); background:#f8faf5; padding:14px 16px; }
+    .arrangement-choice[aria-pressed="true"] { border-color:var(--green); background:#e9f2e3; }
+    .arrangement-choice strong { display:block; font-size:var(--control); }
+    .arrangement-choice span,.arrangement-choice small { display:block; font-size:var(--label); margin-top:4px; }
+    .arrangement-choice small { color:var(--muted); }
+    .arrangement-detail { margin-top:16px; padding:16px; border-radius:14px; background:#f3f5ee; }
+    .beat-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:7px; margin:14px 0; }
+    .beat-cell { text-align:center; border:1px solid #b9cbb0; border-radius:10px; padding:9px 3px; background:#fffefa; }
+    .beat-cell b { display:block; font-size:26px; color:var(--green); }
+    .beat-cell span { display:block; font-size:var(--label); word-break:break-all; }
+    .choice-status { font-size:var(--label); color:var(--green); margin-top:12px; }
+    .learning-tabs { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px; }
+    .learning-tabs .btn[aria-pressed="true"] { background:var(--green); color:white; }
+    .lesson-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+    .lesson-card { display:block; text-align:left; padding:18px; border:1px solid #bacdb1; background:#f4f7ef; border-radius:14px; color:var(--ink); }
+    .lesson-card strong { display:block; font-size:var(--control); }
+    .lesson-card span { display:block; margin-top:8px; font-size:var(--label); }
+    #learnDialog { width:820px; }
+    .lesson-step { padding:22px; border:2px solid #9eb38e; border-radius:16px; background:#f3f7ee; margin:20px 0; }
+    .lesson-step-label { color:var(--green); font-size:var(--label); font-weight:700; }
+    .lesson-step p { font-size:var(--font); margin:10px 0 0; }
+    .lesson-controls { display:flex; flex-wrap:wrap; gap:10px; margin:16px 0; }
+    .lesson-controls .btn { flex:1; min-width:135px; }
+    .lesson-caution { padding:16px; background:#fff2de; border-radius:12px; font-size:var(--label); color:#684b2f; }
+    .source-notes { margin-top:22px; font-size:var(--label); overflow-wrap:anywhere; }
+    .source-notes a { color:#345e4d; display:inline-block; padding:8px 0; }
+    .source-notes p { font-size:var(--label); }
+    .human-form label { display:block; margin:18px 0 8px; }
+    .human-form select,.human-form textarea,.human-form input[type="text"] { width:100%; font:inherit; color:var(--ink); padding:12px; background:#fffefa; border:1px solid #aabb9f; border-radius:10px; }
+    .human-form .consent { display:flex; gap:12px; align-items:flex-start; }
+    .consent input { width:26px; height:26px; flex:none; margin-top:6px; accent-color:var(--green); }
+    .help-card { white-space:pre-wrap; font-family:inherit; font-size:var(--font); overflow-wrap:anywhere; background:#f3f7ee; border:1px solid #b9ccb0; padding:20px; border-radius:14px; }
+    #lyricDraft,.large-type #lyricDraft { height:360px;min-height:300px;max-height:600px;line-height:1.8; }
+    #lyricStory,.large-type #lyricStory { height:180px;min-height:150px;max-height:400px; }
+    #oldLyrics,.large-type #oldLyrics { height:190px;max-height:400px; }
+    .arrangement-detail .btn { margin:6px 6px 0 0; }
+    .demo-badge { display:inline-block; font-size:var(--label); color:#78431e; background:#ffefd7; padding:3px 12px; border-radius:8px; }
+    .inline-help { border:1px solid #d3b385; background:#fff6e8; border-radius:14px; padding:16px; margin-top:16px; }
+    .inline-help p { margin:0 0 12px; font-size:var(--label); }
+    @media(max-width:560px) { .help-ribbon{gap:10px}.help-ribbon .btn{min-width:100%}.lesson-grid{grid-template-columns:1fr}.lesson-step{padding:17px}.arrangement-choice{padding:13px}.arrangement-detail{padding:12px}.choice-panel .btn{width:100%}.beat-grid{gap:4px}.beat-cell span{font-size:var(--label)}.top-actions{flex-wrap:wrap} }
+  </style>
+</head>
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+    <defs>
+      <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13M9 9l11-2"/><ellipse cx="5.5" cy="18.5" rx="3.5" ry="2.5"/><ellipse cx="16.5" cy="16.5" rx="3.5" ry="2.5"/></symbol>
+      <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></symbol>
+      <symbol id="i-save" viewBox="0 0 24 24"><path d="M5 3h12l4 4v14H3V3h2ZM7 3v6h10V3M7 21v-8h10v8"/></symbol>
+      <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M20 3C8 1 2 7 4 14s15 9 16-11ZM4 21L15 10M8 17v-5M11 14h5"/></symbol>
+      <symbol id="i-heart" viewBox="0 0 24 24"><path d="m12 20-8-8C-2 5 6-1 12 6c6-7 14-1 8 6Z"/></symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/></symbol>
+      <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 3h13a3 3 0 0 1 3 3v15H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3ZM3 17h17M8 7h7M8 11h5"/></symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+      <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></symbol>
+      <symbol id="i-speaker" viewBox="0 0 24 24"><path d="M11 4 6 8H3v8h3l5 4ZM15 8a6 6 0 0 1 0 8M18 5a10 10 0 0 1 0 14"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4M12 14v3"/></symbol>
+    </defs>
+  </svg>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand"><div class="brandmark"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg></div><div><div class="brandname">乐愈伴</div><div class="brand-sub">畅春园社区 · 音乐陪伴计划</div></div></div>
+      <div class="top-actions"><span class="local-pill"><span class="dot"></span>离线体验版</span><button class="quiet-btn" id="fontBtn" type="button" aria-pressed="false" aria-label="换成特大字">字号：大</button><button class="quiet-btn" id="helpBtn" type="button"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg>演示说明</button></div>
+    </header>
+    <section class="hero" aria-labelledby="heroTitle">
+      <div><p class="eyebrow">一点心情，一段属于你的旋律</p><h1 id="heroTitle">把日子里的心情，轻轻唱出来。</h1><p>不用懂音乐，想到什么就说什么。我陪你慢慢来。</p></div>
+      <svg class="hero-art" viewBox="0 0 300 145" aria-hidden="true">
+        <ellipse cx="154" cy="127" rx="123" ry="10" fill="#e6eadc"/><circle cx="215" cy="48" r="29" fill="#f1dfb8"/>
+        <path d="M46 124C83 70 125 83 153 117c28-45 73-39 107 7Z" fill="#dce6d3"/><path d="M86 123c-5-43-12-62-25-83m21 62c27-8 40-26 37-44-28 4-39 20-37 44M72 77C45 78 33 62 35 46c22-1 36 12 37 31" fill="#91aa7a"/>
+        <path d="M175 120c4-28 10-47 19-63m-11 31c21 4 32-8 35-21-20-6-29 3-35 21m-6 18c-23-2-31-12-29-26 17-1 29 9 29 26" fill="#718c67"/>
+        <path d="M123 91V45l35-7v45M123 56l35-7" fill="none" stroke="#44694f" stroke-width="3" stroke-linecap="round"/><ellipse cx="114" cy="92" rx="10" ry="7" fill="#44694f"/><ellipse cx="149" cy="85" rx="10" ry="7" fill="#44694f"/>
+        <path d="m245 93 4-5 5 4M64 21l3-7 4 6" fill="none" stroke="#b98b5e" stroke-width="2" stroke-linecap="round"/><circle cx="101" cy="26" r="3" fill="#b8c3a1"/>
+      </svg>
+    </section>
+    <section class="guide-launch" aria-labelledby="guideTitle">
+      <div class="guide-avatar" aria-hidden="true"><svg class="icon"><use href="#i-speaker"/></svg></div>
+      <div class="guide-intro"><h2 id="guideTitle">语音小助手 · 我带您慢慢来</h2><p id="guideWelcome">不知道点哪里？我会一句一句说，并把按钮圈出来。</p></div>
+      <div class="guide-start-actions"><button type="button" class="btn btn-primary" id="guideStartBtn" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-speaker"/></svg><span id="guideStartLabel">开启语音引导</span></button><button type="button" class="text-guide-btn" id="guideTextBtn">只看文字引导</button></div>
+    </section>
+    <nav class="help-ribbon" aria-label="学习和人工帮助">
+      <button type="button" class="btn human-btn" id="humanBtn">找人工帮忙</button>
+      <button type="button" class="btn btn-white" id="instrumentsBtn">认识乐器 · 学着用</button>
+      <button type="button" class="btn btn-white" id="theoryBtn">基础乐理 · 慢慢学</button>
+      <button type="button" class="btn btn-white" id="lyricsBtn">我的故事 · 写成歌词</button>
+    </nav>
+    <main class="workspace">
+      <section class="panel" aria-labelledby="chatTitle">
+        <div class="chat-header"><div class="chat-title"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg><h2 id="chatTitle">和乐愈伴聊一聊</h2></div><span class="chat-sub">从一句心里话开始</span></div>
+        <div class="chat-body" id="chatScroll">
+          <div class="welcome" id="welcome">
+            <div class="assistant-intro"><span class="tiny-avatar"><svg class="icon" aria-hidden="true"><use href="#i-leaf"/></svg></span>你的音乐老朋友</div>
+            <h3>你好呀，今天心情怎么样？</h3>
+            <p class="welcome-copy">一件开心的小事，一段惦记的回忆，<br>都可以变成自己的小调。</p>
+            <p class="start-label">还没想好？从这里聊起</p>
+            <div class="starters">
+              <button type="button" class="starter" data-starter="今天在公园散步，太阳暖暖的，心情挺好，想哼个轻快的小调。"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg><span>说说今天的开心</span><small>留住一个好心情</small></button>
+              <button type="button" class="starter" data-starter="有点想念老家的小院，桂花开的时候很香，想把这段回忆慢慢唱出来。"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg><span>聊聊一段回忆</span><small>把想念放进歌里</small></button>
+              <button type="button" class="starter" data-starter="今天有点累，心里乱乱的，想听着晚风，哼两句放松一下。"><svg class="icon" aria-hidden="true"><use href="#i-leaf"/></svg><span>让心慢慢静下来</span><small>给自己歇一会儿</small></button>
+            </div>
+          </div>
+          <div id="messages" role="log" aria-label="和乐愈伴的对话" aria-live="polite" aria-relevant="additions" aria-atomic="false"></div>
+        </div>
+        <form class="composer" id="chatForm">
+          <div class="composer-head"><label for="userInput">说说你的心情，或者想写的故事</label><span id="charCount">0 / 500</span></div>
+          <textarea id="userInput" maxlength="500" rows="2" placeholder="比如：今天晒了太阳，心里暖暖的……" aria-describedby="inputHint"></textarea>
+          <div class="composer-actions"><div class="action-group"><button class="btn" type="button" id="voiceBtn"><svg class="icon" aria-hidden="true"><use href="#i-mic"/></svg>模拟语音输入</button><button class="btn btn-white" type="button" id="saveBtn" disabled><svg class="icon" aria-hidden="true"><use href="#i-save"/></svg>保存作品</button></div><button class="btn btn-primary" type="submit" id="sendBtn">发送<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button></div>
+          <p class="composer-note" id="inputHint"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span id="storageHint">作品只保存在当前浏览器。语音为模拟，不会录音。</span></p>
+        <button class="btn human-btn" type="button" id="composerHumanBtn">不会操作？找人工帮忙</button></form>
+      </section>
+      <aside class="sidebar" aria-label="我的创作与放松场景">
+        <section class="panel works-panel" aria-labelledby="worksTitle">
+          <div class="section-heading"><h2 id="worksTitle"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>我的作品</h2><span class="count" id="workCount" aria-label="已存档作品数量">0</span></div>
+          <p class="section-note">每一点灵感，都值得被留下。</p>
+          <div id="worksList"></div>
+          <button class="clear-btn" type="button" id="clearBtn"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>清空我的作品</button>
+        </section>
+        <section class="panel ambience" aria-labelledby="sceneTitle">
+          <div class="kicker">给此刻，留一点安静</div><h2 id="sceneTitle"><svg class="icon" aria-hidden="true"><use href="#i-leaf"/></svg>今日放松小角落</h2>
+          <svg class="scene-landscape" viewBox="0 0 280 75" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><circle cx="226" cy="23" r="14" fill="#e4d7ae"/><path d="M0 55Q50 2 98 49T196 37T280 49V75H0Z" fill="#d1ddc5"/><path d="M0 67Q56 33 114 58T217 53T280 63V75H0Z" fill="#b8cbae"/><path d="M74 48q33 12 45 15t40 12" fill="none" stroke="#f4f6ec" stroke-width="6"/><path d="M30 48V27m-11 9 11-17 11 17m-18-7 7-12 7 12M245 62V42m-12 10 12-19 12 19" fill="#8ba37b" stroke="#8ba37b" stroke-width="2" stroke-linejoin="round"/></svg>
+          <div class="scene-tabs" aria-label="选择放松场景">
+            <button type="button" class="scene-tab" data-scene="forest" aria-pressed="true">森林</button><button type="button" class="scene-tab" data-scene="rain" aria-pressed="false">细雨</button><button type="button" class="scene-tab" data-scene="stream" aria-pressed="false">溪流</button><button type="button" class="scene-tab" data-scene="wind" aria-pressed="false">晚风</button><button type="button" class="scene-tab" data-scene="low" aria-pressed="false">低声轻伴</button>
+          </div><p id="sceneGuide" aria-live="polite">想象树叶轻轻摇动。坐舒服一点，让肩膀歇一会儿。</p><p class="scene-note">仅展示搭配文字，不播放声音。</p>
+        </section>
+      </aside>
+    </main>
+    <footer class="footer"><span><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>陪伴与放松，不替代诊断或治疗。</span><span>畅春园社区 · 让每个日常都有回响</span></footer>
+  </div>
+  <dialog id="voiceDialog" aria-labelledby="voiceTitle"><div class="dialog-top"><h2 id="voiceTitle">模拟说一句心里话</h2><button type="button" class="close-btn" data-close="voiceDialog" aria-label="关闭模拟语音"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><div class="dialog-coach" id="voiceCoach"><p id="voiceCoachCaption" aria-live="polite">请点一句最像您心情的话，文字会填入输入框。</p><div class="dialog-coach-actions"><button type="button" class="btn" id="voiceCoachRepeat" aria-label="再听一次提示">重听</button><button type="button" class="btn btn-white" id="voiceCoachMute" aria-pressed="false">关闭声音</button><button type="button" class="btn btn-white" id="voiceCoachEnd" aria-label="结束语音引导">结束</button></div><div class="dialog-coach-status" id="voiceCoachStatus" role="status"></div></div><div class="dialog-body"><p><span class="demo-tag">模拟语音</span> 选一句话放入输入框，还能自己改一改。</p><p class="section-note">不会打开麦克风，也不会录音。</p><button class="voice-choice" id="firstVoiceChoice" type="button" data-voice="那个……今天去公园了，晒晒太阳，挺开心的，想哼个小调。"><small>开心的小日常</small>“那个……今天去公园了，晒晒太阳，挺开心的。”</button><button class="voice-choice" type="button" data-voice="我啊，有点想老家，小时候院子里有棵桂花树，嗯，想把这个唱出来。"><small>想念老家的时光</small>“我啊，有点想老家，院子里有棵桂花树……”</button><button class="voice-choice" type="button" data-voice="接着上次那个调子吧，慢一点，我想加一句：晚风陪我慢慢走。"><small>接着上次的作品</small>“接着上次那个调子吧，慢一点，我想加一句……”</button></div></dialog>
+  <dialog id="helpDialog" aria-labelledby="helpTitle"><div class="dialog-top"><h2 id="helpTitle">乐愈伴 · 演示说明</h2><button type="button" class="close-btn" data-close="helpDialog" aria-label="关闭演示说明"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><div class="dialog-body">
+    <p>一个陪社区长辈把心情变成音乐灵感的小工具。</p>
+    <ol class="step-list"><li>说说心情，或点「模拟语音输入」。</li><li>获得六段创作引导，试着哼一句、写一句。</li><li>创作自动存档。点「保存作品」可再次确认保存。</li><li>说「接着上次改」，或在作品旁点「接着创作」。</li></ol>
+    <div class="notice">本 Demo 的创作和检索在本地运行，不调用大模型。语音输入仍为模拟，不会录音；音乐与场景不生成声音。新增的导航可使用设备自带的中文声音朗读提示，没有可用声音时保留大字和圈选指引。真实上线需另行接入模型与账号隔离。</div>
+    <h3 class="demo-heading">适老化与语音引导</h3><p class="section-note">默认 24 像素大字，可切换为 28 像素特大字；主按钮至少 58 像素高。点「开启语音引导」后，小助手会随操作说明下一步，并圈出对应按钮；也可以用「找到按钮」定位。可重听、调慢、关闭声音或结束引导。语音只采用本机可用的中文声音，不调用外部语音服务；无声音时仍可完成全部操作。</p>
+    <h3 class="demo-heading">学习与人工兜底</h3><p class="section-note">新增基础乐理、六种音乐活动乐器教程；点击课程后一次看一步。回答不明白时可转到“找人工帮忙”。当前只生成本地求助卡，没有客服在线、排队或消息发送。上线时需另行配置并验证真实服务地址、服务时间与接待人员。</p>
+    <h3 class="demo-heading">伴奏可选、可解释</h3><p class="section-note">每个创作提供三种 4/4 拍伴奏示例，说明柱式或分解、每分钟拍数、每拍动作和换和弦时机。心情只用于推荐起点，用户可以改选；选项与作品一起保存，续写保留。示例按键盘演奏理解，不会要求笛子或沙锤弹和弦。</p>
+    <h3 class="demo-heading">面试演示路线</h3>
+    <p class="section-note">① 聊一段回忆，选“一个音接一个音” → ② 问“上次的伴奏是什么速度” → ③ 学“柱式与分解和弦”或“海浪鼓怎么用” → ④ 点“我的故事 · 写成歌词”，完成四步共创 → ⑤ 问库外问题，展示人工求助卡 → ⑥ 清空作品后再问“接着上次改”。</p>
+    <h3 class="demo-heading">最近一次检索过程</h3><pre class="retrieval" id="retrievalTrace">还没有检索。先聊一句吧。</pre>
+    <details><summary>查看模拟检索与记忆规则</summary><p class="section-note">优先检查「上次、之前、接着改」等续作意图，在当前本地用户的作品里做关键词与词袋余弦相似度检索。没有匹配作品，再检索四类公共知识。无结果则明确说暂时不清楚。此处的向量是前端特征数组，不是模型语义向量。</p><p class="section-note">作品字段：口述故事、需求、和弦、哼唱提示、歌词草稿、乐器偏好、反馈、情绪标签。本地 ID 仅用于 Demo 数据分区，不是身份认证；共用浏览器会看到同一份作品。清空会同时清除本次对话和创作上下文。浏览器限制存储时退为当前页面内存保存。</p></details>
+    <details><summary>查看内置系统 Prompt</summary><pre id="promptContent"></pre></details>
+  </div></dialog>
+  <dialog id="workDialog" aria-labelledby="workDialogTitle"><div class="dialog-top"><h2 id="workDialogTitle">我的灵感</h2><button type="button" class="close-btn" data-close="workDialog" aria-label="关闭作品"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><div class="dialog-body" id="workDetail"></div></dialog>
+
+  <dialog id="learnDialog" aria-labelledby="learnTitle">
+    <div class="dialog-top"><h2 id="learnTitle">音乐小课堂</h2><button type="button" class="close-btn" data-close="learnDialog" aria-label="关闭音乐小课堂">×</button></div>
+    <div class="dialog-body">
+      <div id="lessonCatalog"><div class="learning-tabs"><button type="button" class="btn" id="tabInstruments" aria-pressed="true">认识乐器</button><button type="button" class="btn" id="tabTheory" aria-pressed="false">基础乐理</button></div><p id="catalogIntro"></p><div class="lesson-grid" id="lessonList"></div></div>
+      <div id="lessonDetail" hidden><button type="button" class="btn btn-white" id="lessonBackBtn">返回课程列表</button><p id="lessonIntro"></p><div class="lesson-step"><div class="lesson-step-label" id="lessonStepLabel"></div><p id="lessonStepText" aria-live="polite" tabindex="-1"></p></div><div class="lesson-controls"><button type="button" class="btn btn-white" id="lessonPrevBtn">上一步</button><button type="button" class="btn btn-primary" id="lessonNextBtn">下一步</button></div><div class="lesson-controls"><button type="button" class="btn" id="lessonReadBtn">读这一步</button><button type="button" class="btn btn-white" id="lessonStopBtn">停止朗读</button></div><p class="section-note" id="lessonSpeechStatus" role="status">想听的时候，点“读这一步”。</p><p class="lesson-caution" id="lessonCaution"></p><button type="button" class="btn human-btn" id="lessonHumanBtn">请老师帮我看看</button><details class="source-notes"><summary>资料来源与范围</summary><div id="lessonSources"></div><p>资料用于核对基本概念和发声方法。分步练习为本 Demo 简化设计；不代表专业治疗，也不推荐购买特定品牌。</p></details></div>
+    </div>
+  </dialog>
+  <dialog id="lyricDialog" aria-labelledby="lyricTitle">
+    <div class="dialog-top"><h2 id="lyricTitle">我的故事，写成自己的歌</h2><button type="button" class="close-btn" data-close="lyricDialog" aria-label="关闭歌词共创">×</button></div>
+    <div class="dialog-body human-form"><div class="lesson-step-label" id="lyricStepLabel"></div><p id="lyricPrompt" aria-live="polite"></p><button class="btn btn-white" type="button" id="lyricGuideReadBtn">听听这一步怎么做</button>
+      <div id="lyricStage0"><label for="lyricMode">这次想做什么？</label><select id="lyricMode"><option value="new">写一份自己的新词</option><option value="rewrite">用自己的故事改编歌词</option></select><label for="lyricTheme">先选一个主题</label><select id="lyricTheme"><option>日常的小开心</option><option>家乡和旧时光</option><option>想对家人说的话</option><option>给自己一点鼓励</option><option>我的其他故事</option></select><p class="section-note">主题没有好坏，下一步再说自己的故事。</p></div>
+      <div id="lyricStage1" hidden><label for="lyricStory">说说您的故事</label><textarea id="lyricStory" maxlength="1000" rows="5" placeholder="比如：今天和老伴去公园，看见桂花开了，让我想起老家的小院。"></textarea><label for="lyricKeyLine">最想保留的一句话（可不填）</label><textarea id="lyricKeyLine" maxlength="100" rows="2" placeholder="比如：桂花香，飘回家。"></textarea><div id="rewriteFields" hidden><label for="favoriteSong">喜欢的歌名（可不填）</label><input id="favoriteSong" maxlength="100" type="text" placeholder="只作风格和试唱参考"><label for="oldLyrics">想换掉的旧词（可不填）</label><textarea id="oldLyrics" maxlength="1500" rows="4" placeholder="可以粘贴一小段，用换行分开每句。"></textarea><p class="section-note">不自动查找原歌词。可按您提供的分行和重复位置写新词；能否贴合原曲，仍需试唱调整。</p></div></div>
+      <div id="lyricStage2" hidden><label for="lyricForm">想先写多长？</label><select id="lyricForm"><option value="4">四句短词 · 先写一小段</option><option value="8">八句两段 · 故事加重复句</option><option value="follow">沿用我提供的旧词分行（最多 12 句）</option></select><label for="lyricStyle">想怎样说？</label><select id="lyricStyle"><option>口语一点</option><option>句子短一点</option></select><label for="lyricRequest">还有什么想法？（可不填）</label><textarea id="lyricRequest" maxlength="300" rows="3" placeholder="比如：保留桂花的画面，不用押韵。"></textarea><p class="section-note">本地演示按故事原句、指定句和段落形式整理；复杂要求可在下一步自己改，或请老师陪着改。</p></div>
+      <div id="lyricStage3" hidden><p class="notice" id="lyricWhy"></p><p class="section-note" id="lyricRequirementNote"></p><label for="lyricDraft">我的歌词草稿 · 点文字就能修改</label><textarea id="lyricDraft" maxlength="3000" rows="10"></textarea><div class="lesson-controls"><button type="button" class="btn" id="lyricReadBtn">读这份歌词</button><button type="button" class="btn btn-white" id="lyricStopBtn">停止朗读</button></div><button type="button" class="btn btn-primary" id="lyricSaveBtn">保存这份歌词</button></div>
+      <p id="lyricStatus" role="status" class="choice-status"></p><div class="lesson-controls"><button type="button" class="btn btn-white" id="lyricPreviousBtn">上一步</button><button type="button" class="btn btn-primary" id="lyricNextBtn">下一步</button></div><button type="button" class="btn human-btn" id="lyricHelpBtn">请人陪我一起写</button><p class="section-note" id="lyricSpeechStatus" role="status"></p>
+    </div>
+  </dialog>
+  <dialog id="humanDialog" aria-labelledby="humanTitle">
+    <div class="dialog-top"><h2 id="humanTitle">找人工帮忙</h2><button type="button" class="close-btn" data-close="humanDialog" aria-label="关闭人工帮助">×</button></div>
+    <div class="dialog-body"><span class="demo-badge">演示入口 · 尚未接通真人</span><p>先把不会的地方记下来，给身边的家人或社区工作人员看看。</p><p class="section-note">这里不会发消息，也不会安排回电。</p>
+      <form id="humanForm" class="human-form"><label for="helpKind">您想请人帮什么？</label><select id="helpKind"><option>页面操作不会用</option><option>乐器想请老师教</option><option>伴奏和数拍想请老师教</option><option>AI 没有答明白</option></select><label for="helpIssue">补充一句（可以不填）</label><textarea id="helpIssue" maxlength="300" rows="3" placeholder="比如：我想请人带着数四拍。"></textarea><label class="consent"><input type="checkbox" id="includeQuestion"><span>把刚才的问题也放进求助卡（自愿）</span></label><p class="section-note" id="helpQuestionPreview"></p><button type="submit" class="btn btn-primary">生成求助卡</button></form>
+      <section id="handoffResult" hidden><h3>求助卡准备好啦</h3><p class="section-note">还没有发送给任何人。您可以出示这张卡，或下载后自行交给工作人员。</p><pre class="help-card" id="handoffCard"></pre><div class="lesson-controls"><button type="button" class="btn btn-primary" id="downloadHelpBtn">下载求助卡</button><button type="button" class="btn btn-white" id="editHelpBtn">改一改</button></div><p class="section-note" id="downloadHelpStatus" role="status"></p></section>
+    </div>
+  </dialog>
+  <section class="coach-dock" id="coachDock" aria-label="语音小助手导航" hidden>
+    <div class="coach-top"><span class="coach-step" id="guideStepLabel">第 1 步 / 共 5 步 · 说说心情</span><button class="coach-close" type="button" id="guideEndBtn">结束引导</button></div>
+    <p class="coach-caption" id="guideCaption" aria-live="polite" aria-atomic="true">请点「开启语音引导」，我会陪您慢慢来。</p>
+    <div class="coach-bottom"><div class="coach-actions"><button class="btn btn-primary" type="button" id="guideNextBtn">指给我看</button><button class="btn btn-white" type="button" id="guideLocateBtn">找到按钮</button><button class="btn btn-white" type="button" id="guideRepeatBtn">再说一遍</button><button class="btn btn-white" type="button" id="guideMuteBtn" aria-pressed="false">关闭声音</button></div><div class="speech-state" id="speechState" data-state="off" role="status"><span class="dot" aria-hidden="true"></span><span id="speechStatusText">等待开启</span></div><label class="rate-control" for="speechRate">语速<select id="speechRate"><option value="0.82">慢一点</option><option value="0.68">再慢一点</option><option value="0.96">平常速度</option></select></label></div>
+  </section>
+  <div id="toast" role="status" aria-live="polite" hidden></div>
+  <script>
+  'use strict';
+  // 单文件本地 Demo。没有 fetch、模型调用、录音、音乐播放或外接数据库。
+  // 导航朗读使用浏览器 SpeechSynthesis，仅选本机中文声音；无可用声音时降级为文字指引。
+  // SYSTEM_PROMPT 为产品约束与演示材料；实际回复由下方白名单知识 + 本地规则生成。
+  const SYSTEM_PROMPT = `你是「乐愈伴」——专为中老年人打造的零基础AI音乐编创疗愈助手，用于畅春园线下社区音乐疗愈项目辅助。
+用户优先使用语音说话输入，表达常常口语化、句子零散、语序颠倒、想到什么说什么，你要耐心理解，不要要求用户说得工整书面。必要时简单复述确认：“我听到啦，你是想要……对吗？”
+你的所有回答必须遵循：字少、通俗、温柔、无专业术语、鼓励式沟通、适合老年人阅读，禁止晦涩理论、禁止评判好坏、禁止打击式沟通。
+
+## 检索优先级规则（RAG + 用户个人作品记忆向量库）
+1. **最高优先级：用户个人作品向量库**
+用户提到：上次、之前、接着改、沿用之前的调子、我之前写的曲子/歌词 → 优先调取该老人历史创作记录，接续修改、复用他喜欢的感觉、和弦、氛围、词句风格。
+个人库每条存储：口述故事/心情、创作需求、和弦方案、哼唱提示、歌词草稿、乐器偏好、用户反馈、情绪标签。
+仅归属当前用户，不能调取其他人作品；用户说【清空我的作品】，立刻清空并温柔确认。
+2. 没有命中历史记录，再检索公共知识库4块：
+    - 乐理简易库：C/G/F/Am简单和弦、平稳4/4拍、好哼唱的旋律思路（无复杂乐理）
+    - 器乐简易指南：笛子、古筝、二胡、口琴零基础入门内容，高阶技巧委婉拒绝
+    - 音乐疗愈创作引导库：承接心情、回忆，引导用音乐、歌词表达
+    - 操作答疑库：保存、试听、怎么用这个工具这类问题
+3. 知识库检索不到内容，统一回复：“这个我暂时不清楚，我们换个内容试试吧”，严禁编造乐理、乐器知识。
+
+## 核心五大功能（仅文本演示，不实时生成音频）
+1.【零基础音乐编创辅助】
+用户用大白话、语音描述心情、氛围、想创作的感觉，你需要：
+- 给出超级简单、适合新手的和弦进行（仅限C、G、F、Am简易走向）
+- 给出慢速、好哼唱的旋律创作思路
+- 给出通俗解释，告诉老人“这个调子是什么感觉、适合怎么哼”
+- 提供可记录的创作内容，方便老人保存自己的灵感
+你只提供创作脚手架，绝不替用户写完作品，核心是引导老人自我表达。
+
+2.【歌词共创引导】
+顺着老人的回忆、心情、小故事，一步步引导写歌词：
+- 不直接写完整歌词丢给老人；先用简单提问启发：“要不要说说这件事里，你印象最深的一句话？”
+- 引导句式简短、口语化、贴近老人自己说话的样子，不用讲究华丽文采、不用严格押韵
+- 老人说出句子之后，可以温和帮忙微调顺口一点，但是不改原意
+- 可以提醒：歌词长短随便，长短句都可以，自己唱着舒服最重要
+- 老人想要押韵，再轻轻提示；不强求押韵
+
+3.【器乐&乐理大白话答疑】
+支持笛子、古筝、二胡、口琴等老年常用乐器入门问题。
+所有教学全部生活化类比、通俗讲解。
+高阶复杂技巧直接委婉拒绝，只教零基础内容。
+不懂就坦白说不知道，绝对不编造知识，零幻觉。
+
+4.【场景疗愈白噪音搭配（界面演示版）】
+根据老人语音说出的需求，搭配森林、下雨、溪流、晚风、安静低频疗愈氛围组合。
+只输出：场景搭配方案 + 适合疗愈的静坐引导语。
+不需要生成真实音频，仅作为Demo演示内容。
+
+5.【情绪疗愈陪伴】
+先承接老人情绪，温柔共情，再引导通过音乐、歌词表达心情。
+⚠️重要边界：不做医疗诊断、不治病、不心理干预，只做陪伴放松；如果用户持续低落，温和提醒可以多和家人聊聊。
+
+## 固定强制规则（必须100%遵守）
+1. 适配语音输入：接纳口语、碎句、重复、表达含糊；不要让用户重新组织语言。
+2. 全程老年友好：短句、分段、无术语、解释通俗、温柔耐心
+3. 永远正向鼓励：只夸奖、只肯定、不说错、不批评、不纠正
+4. 严格防幻觉：知识库没有的内容直接说暂时不清楚，绝不编造乐理、乐器知识
+5. 不做复杂音乐、不转调、不复杂编曲、只做极简疗愈向创作
+6. 用户完成一次创作输出后，自动整理本次创作信息（心情、和弦、歌词草稿、哼唱提示），写入用户个人作品向量库存档；并且固定使用下面统一输出格式。
+
+## ✅ 创作类回答固定输出结构（编创/写歌词需求，严格按这个模板）
+【氛围解读】通俗一句话
+【简易和弦进行】极简新手走向
+【哼唱小提示】老年人能立刻跟着做的方法
+【歌词小启发】温和引导句子，不写完整成品歌词
+【疗愈场景搭配】适配的白噪音/氛围方案（演示用）
+【专属治愈小结】温柔短句卡片
+
+## 本 Demo 补充规则
+- 创作仍只使用 C、G、F、Am 和 4/4 拍。给出三种简单伴奏选择：柱式长音、分解四拍、柱式两次；说明每拍动作、速度和换和弦时机。专业词旁必须有大白话解释。
+- 心情与版本的匹配只是可更改的建议，没有固定心理效果。用户选择后，将伴奏类型、节拍、速度、节奏、反馈写入当前作品；续写保留选择。
+- 歌词共创的新流程优先于“不写完整成品”的旧限制：先明确主题、个人故事和要求，再由用户主动生成可编辑的专属草稿。草稿生成后自动保存，修改后可再次保存；改编只依用户提供的故事和旧词结构，不自动检索原歌歌词，不声称已匹配原曲。
+- 基础乐理与乐器教程只从白名单知识返回。学习问答不保存成创作，也不能把“不会、没听懂”当歌词。
+- 用户明确找人工时打开人工帮助；无法解答或反复不懂时给出明显入口。当前是求助卡演示，绝不声称已接通、已派单或有人等待。
+- 个人问题默认不加入求助卡；须由用户勾选。清空作品时同时清除求助卡中的旧问题。
+- 音乐活动只作陪伴放松，不承诺疗效；具体器材操作以说明书和现场老师指导为准。`;
+
+  const HEADINGS = ['【氛围解读】','【简易和弦进行】','【哼唱小提示】','【歌词小启发】','【疗愈场景搭配】','【专属治愈小结】'];
+  const UNKNOWN = '这个我暂时不清楚，我们换个内容试试吧';
+  const $ = id => document.getElementById(id);
+  const uid = () => globalThis.crypto && typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : 'local-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
+  const PROFILE_KEY = 'leyuban.current-user.v1';
+  const FONT_KEY = 'leyuban.large-font.v1';
+  let persistenceOK = true;
+  let currentUser;
+  try {
+    currentUser = localStorage.getItem(PROFILE_KEY);
+    if (!currentUser || !/^[a-zA-Z0-9-]{8,100}$/.test(currentUser)) { currentUser = uid(); localStorage.setItem(PROFILE_KEY,currentUser); }
+  } catch (_) { currentUser = uid(); persistenceOK = false; }
+  const STORE_KEY = 'leyuban.works.v1.' + currentUser;
+  let works = [], currentWork = null, toastTimer, lastTrace = '还没有检索。先聊一句吧。';
+  let persistenceWarning = '';
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) {
+      const data = JSON.parse(raw);
+      if (!Array.isArray(data)) throw new Error('Invalid records');
+      works = data.filter(validRecord);
+      if (works.length !== data.length) persistenceWarning = '有些旧记录暂时无法读取，其余作品仍在。';
+    }
+  } catch (_) { persistenceWarning = '暂时无法读取旧作品；本次仍可以继续创作。'; }
+
+  // 白名单知识库：未命中的知识不补全、不借助网络编造。
+  const KNOWLEDGE_BASE = [
+    {id:'theory-chord',category:'乐理简易库',keys:['和弦','C和弦','G和弦','F和弦','Am和弦'],text:'可以把几个声音一起响，想成几个人轻轻合唱。C、G、F、Am 是这里用到的四个小记号，不用背。'},
+    {id:'theory-beat',category:'乐理简易库',keys:['四四拍','4/4','节拍','节奏','拍子'],text:'慢慢数“一、二、三、四”，再从一开始。可以用手轻点，按自己舒服的速度来。'},
+    {id:'theory-hum',category:'乐理简易库',keys:['怎么哼','哼唱','旋律','调子'],text:'先用“嗯”轻轻哼一句。声音不用高，句子短一点，停下来换口气。'},
+    {id:'instrument-flute',category:'器乐简易指南',keys:['笛子','竹笛'],text:'笛子先试轻轻送气，像慢慢吹凉一口热汤。找声音的位置，可以请社区老师当面陪你试。'},
+    {id:'instrument-guzheng',category:'器乐简易指南',keys:['古筝'],text:'古筝可以先轻拨一根弦，听它慢慢停下来。坐舒服，肩膀放松，不急着弹一整段。'},
+    {id:'instrument-erhu',category:'器乐简易指南',keys:['二胡'],text:'二胡先把弓慢慢、平稳地拉过去，再拉回来。像轻轻推开一扇门；持琴和持弓请老师当面帮你看看。'},
+    {id:'instrument-harmonica',category:'器乐简易指南',keys:['口琴'],text:'口琴先轻轻试着吹气、吸气，听听声音的不同。别用力憋气，累了就停一停。'},
+    {id:'emotion-joy',category:'音乐疗愈创作引导库',keys:['开心','快乐','高兴','愉快','轻快','太阳','晒','暖暖','公园','散步','孙子','孙女'],text:'先留住一件开心的小事，用自己的话说一句。',mood:'joy'},
+    {id:'emotion-memory',category:'音乐疗愈创作引导库',keys:['回忆','想念','怀念','老家','小时候','桂花','故乡','惦记','小院','父亲','母亲','妈妈','爸爸','老伴','童年'],text:'想想记忆里一个声音、一种气味，或一句熟悉的话。',mood:'memory'},
+    {id:'emotion-low',category:'音乐疗愈创作引导库',keys:['低落','难过','伤心','孤单','孤独','不开心','难受','委屈','哭','烦','乱乱','累','闷','不高兴','不快乐'],text:'先让自己坐舒服。愿意的话，把此刻的心情说成一句短话。',mood:'low'},
+    {id:'emotion-calm',category:'音乐疗愈创作引导库',keys:['放松','安静','平静','休息','睡前','睡觉','睡不着','森林','下雨','细雨','雨声','溪流','晚风','低频','轻轻','舒缓'],text:'不用赶着完成，跟着自己的呼吸，慢慢哼两声就好。',mood:'calm'},
+    {id:'create-lyrics',category:'音乐疗愈创作引导库',keys:['歌词','写歌','编创','创作','小调','唱出来','押韵','写一句','加一句','一句是','我想写','我写了','整首歌','完整的歌','编曲'],text:'要不要说说这件事里，你印象最深的一句话？不必押韵，唱得舒服就好。'},
+    {id:'operation-save',category:'操作答疑库',keys:['保存','存档','收藏','作品在哪'],text:'每次创作后会自动存到「我的作品」。也可以点输入框下方的「保存作品」。'},
+    {id:'operation-clear',category:'操作答疑库',keys:['清空'],text:'想删除时，点「清空我的作品」，或发送“清空我的作品”。作品和本次对话会一起清除。'},
+    {id:'operation-listen',category:'操作答疑库',keys:['试听','播放','听听','听一下','没声音','没有声音','怎么听'],text:'这个演示不播放音乐。小助手可以朗读操作提示；点回复下方的“读给我听”，也能听哼唱提示，再自己轻轻哼。'},
+    {id:'operation-use',category:'操作答疑库',keys:['怎么用','使用方法','语音','麦克风','你好','您好','谢谢','帮助'],text:'说一句心情，或点「模拟语音输入」，再点「发送」。想接着写，就点作品旁的「接着创作」。'}
+  ];
+  const KNOWLEDGE_SOURCES = {"meter": {"name": "Open Music Theory · 简单节拍", "url": "https://viva.pressbooks.pub/openmusictheory/chapter/simple-meter-and-time-signatures/"}, "notes": {"name": "musictheory.net · 音符时值", "url": "https://www.musictheory.net/lessons/11"}, "triad": {"name": "Open Music Theory · 三和弦", "url": "https://viva.pressbooks.pub/openmusictheory/chapter/triads/"}, "arp": {"name": "Yamaha · 分解和弦释义", "url": "https://hub.yamaha.com/keyboards/k-how-to/10-great-arpeggios-for-left-and-right-hand/"}, "tempo": {"name": "Yamaha P-515 · 节拍与速度说明", "url": "https://jp.yamaha.com/files/download/other_assets/6/1204086/p515_en_om_b0.pdf"}, "health": {"name": "NIH NCCIH · 音乐与健康", "url": "https://www.nccih.nih.gov/health/music-and-health-what-you-need-to-know"}, "shaker": {"name": "MEINL · 蛋沙锤介绍", "url": "https://meinlpercussion.com/en/products/es-set-m8832.html"}, "ocean": {"name": "Remo · 海浪鼓介绍", "url": "https://remo.com/product/ocean-drum"}, "rain": {"name": "MEINL · 雨声筒介绍", "url": "https://meinlpercussion.com/en/products/rs1bk-m-l-m6783.html"}, "kalimba": {"name": "HOKEMA · 拇指琴发声方法", "url": "https://www.hokema.de/en/pages/kinderleichtes-musizieren"}, "tongue": {"name": "MEINL · 钢舌鼓发声方法", "url": "https://meinlsonicenergy.com/en/products/cstd1dg-m316511.html"}, "bowl": {"name": "MEINL · 金属颂钵入门", "url": "https://meinlsonicenergy.com/en/topics/the-complete-guide-to-metal-singing-bowls"}};
+  const LESSONS = [
+  {
+    "id": "beat",
+    "kind": "theory",
+    "title": "拍子、节奏、速度",
+    "keys": [
+      "拍子",
+      "节拍",
+      "节奏",
+      "基础乐理",
+      "乐理基础"
+    ],
+    "intro": "拍子是均匀的脚步；节奏是声音怎样长短搭配；速度是脚步走多快。",
+    "steps": [
+      "先用手均匀地点四下，像散步一样稳。",
+      "保持四下不变。试着只在第一下轻哼，其余时间把声音留住。",
+      "再试每一下都轻哼。这是换了声音的排列，拍子仍然一样。"
+    ],
+    "caution": "节奏和速度不是一回事。练习只是示例，没有标准心情答案。",
+    "refs": [
+      "meter",
+      "tempo"
+    ]
+  },
+  {
+    "id": "meter",
+    "kind": "theory",
+    "title": "四拍一小段 · 4/4",
+    "keys": [
+      "4/4",
+      "四四拍",
+      "四拍",
+      "小节",
+      "拍号"
+    ],
+    "intro": "4/4 拍：四分音符算一拍，每四拍是一小节。先会数“一二三四”就够了。",
+    "steps": [
+      "均匀数“一、二、三、四”，然后重新从一开始。",
+      "数到“一”时心里稍微强调一下，其他拍也保持均匀。",
+      "本 Demo 每数完四拍，下一次“一”换下一个和弦。"
+    ],
+    "caution": "四拍并不表示一定弹四下；一次长音也可以持续四拍。",
+    "refs": [
+      "meter"
+    ]
+  },
+  {
+    "id": "tempo",
+    "kind": "theory",
+    "title": "快慢怎么定 · BPM",
+    "keys": [
+      "BPM",
+      "bpm",
+      "速度",
+      "每分钟",
+      "一分钟",
+      "60拍",
+      "慢一点怎么"
+    ],
+    "intro": "BPM 就是每分钟几拍。这里每拍按四分音符数；60 拍约每秒一下。",
+    "steps": [
+      "先按每分钟 60 拍慢数，每秒大约一下。",
+      "想轻快一点，可以试每分钟 76 拍；数字大一些，脚步快一些。",
+      "跟不上就慢下来。一次只换快慢，先不改其他动作。"
+    ],
+    "caution": "60、64、76 是练习起点，不是疗愈处方；觉得舒服更重要。",
+    "refs": [
+      "tempo"
+    ]
+  },
+  {
+    "id": "duration",
+    "kind": "theory",
+    "title": "一个音留多久",
+    "keys": [
+      "时值",
+      "音符",
+      "全音符",
+      "二分音符",
+      "四分音符",
+      "八分音符",
+      "几拍",
+      "长音"
+    ],
+    "intro": "在这里的 4/4 拍中：四分音符 1 拍，二分音符 2 拍，全音符 4 拍，八分音符半拍。",
+    "steps": [
+      "轻哼一声，数一拍就停：这次留了一拍。",
+      "再哼一声，连续留两拍，声音中间不用重来。",
+      "最后试一声留四拍；如果不舒服，就随时停下。"
+    ],
+    "caution": "音符长短是相对的。只有说明“什么音符算一拍”，才能这样数。",
+    "refs": [
+      "notes",
+      "meter"
+    ]
+  },
+  {
+    "id": "rest",
+    "kind": "theory",
+    "title": "停一下也是音乐",
+    "keys": [
+      "休止",
+      "休止符",
+      "停顿",
+      "延长",
+      "留白",
+      "换气"
+    ],
+    "intro": "“延长”是声音继续；“休止”是暂时不出声，心里仍数拍。",
+    "steps": [
+      "数一、二时轻哼；数三、四时安静，心里继续数。",
+      "再从一开始，不用抢着把空白填满。",
+      "唱短句时，在自然停顿处换气；不用憋气把四拍唱满。"
+    ],
+    "caution": "静下来和把声音拖长是两种动作，可以慢慢体会。",
+    "refs": [
+      "notes"
+    ]
+  },
+  {
+    "id": "chord",
+    "kind": "theory",
+    "title": "和弦是什么",
+    "keys": [
+      "和弦是什么",
+      "什么是和弦",
+      "和弦怎么理解",
+      "三和弦"
+    ],
+    "intro": "可以把和弦想成一小组搭配的音。这里用三个音组成的简单和弦。",
+    "steps": [
+      "先把一个和弦想成三位一起唱歌的朋友。",
+      "三个人同时唱，是一起发声；轮流唱，是依次发声。",
+      "C、G、F、Am 是四组音的名字；先认名字，不急着背。"
+    ],
+    "caution": "这只是帮助理解的比喻，不涉及复杂和声或转调。",
+    "refs": [
+      "triad",
+      "arp"
+    ]
+  },
+  {
+    "id": "notes",
+    "kind": "theory",
+    "title": "C、G、F、Am 认一认",
+    "keys": [
+      "C和弦",
+      "G和弦",
+      "F和弦",
+      "Am和弦",
+      "组成音",
+      "和弦有哪些音",
+      "和弦音",
+      "123",
+      "简谱"
+    ],
+    "intro": "四组音分别是 C＝C E G，G＝G B D，F＝F A C，Am＝A C E。",
+    "steps": [
+      "若以 C 为 do：C 和弦可唱 do、mi、sol；F 可唱 fa、la、do。",
+      "G 可唱 sol、si、re；Am 可唱 la、do、mi。需要排成从低到高时，部分音放到高一组。",
+      "这些是和弦里的音，不是一首完整旋律。可请老师在键盘上指出来。"
+    ],
+    "caution": "这里的唱名以 C 为 do；数字不是手指编号，也不能直接套到每一件乐器上。",
+    "refs": [
+      "triad"
+    ]
+  },
+  {
+    "id": "block",
+    "kind": "theory",
+    "title": "一起轻按 · 柱式和弦",
+    "keys": [
+      "柱式",
+      "块状和弦",
+      "同时按",
+      "一起按",
+      "同时轻按"
+    ],
+    "intro": "柱式和弦，就是把同一和弦里的几个音同时奏响。",
+    "steps": [
+      "按键盘演奏理解：先请老师找好同一组和弦的三个音。",
+      "第一拍一起轻按，保持到第四拍结束；二、三、四不重按。",
+      "下一小节的第一拍，再换另一组音一起按。"
+    ],
+    "caution": "这是本 Demo 的长音版本。柱式也可以用别的节奏，不等于只能长按四拍。",
+    "refs": [
+      "triad",
+      "arp"
+    ]
+  },
+  {
+    "id": "broken",
+    "kind": "theory",
+    "title": "依次轻弹 · 分解和弦",
+    "keys": [
+      "分解",
+      "琶音",
+      "依次弹",
+      "依次轻弹",
+      "一个音接一个音"
+    ],
+    "intro": "分解和弦，是把同一组和弦音依次奏响，不用同时按。",
+    "steps": [
+      "按键盘演奏理解：请老师把三个和弦音从低到高排好。",
+      "本 Demo 每拍一个音：低、中、高、中。共四拍，每个音一拍。",
+      "数完四拍，下一拍换下一组和弦音，再走同样四步。"
+    ],
+    "caution": "“低中高中”只是一个简单版本，不是所有分解和弦都这样弹。",
+    "refs": [
+      "arp",
+      "triad"
+    ]
+  },
+  {
+    "id": "progression",
+    "kind": "theory",
+    "title": "什么时候换和弦",
+    "keys": [
+      "和弦进行",
+      "和弦走向",
+      "换和弦",
+      "和弦顺序",
+      "多久换"
+    ],
+    "intro": "和弦进行是几组音的先后顺序；它本身没有规定用哪种奏法、速度和节奏。",
+    "steps": [
+      "比如 C → F → G → C，只先告诉我们四组音的顺序。",
+      "本 Demo 再约定：每组音用一小节，也就是四拍。",
+      "然后选“一起轻按”或“依次轻弹”，才知道每拍怎么做。"
+    ],
+    "caution": "每小节换一次只是入门约定；别的音乐可能换得更快或更慢。",
+    "refs": [
+      "triad",
+      "meter",
+      "arp"
+    ]
+  },
+  {
+    "id": "melody",
+    "kind": "theory",
+    "title": "旋律和伴奏怎么分",
+    "keys": [
+      "旋律",
+      "伴奏",
+      "怎么哼",
+      "哼唱",
+      "调子"
+    ],
+    "intro": "旋律是嘴里哼的那条线；伴奏是在旁边托着它的声音。",
+    "steps": [
+      "先用舒服的声音哼两声，不用追求高音。",
+      "自己哼旋律时，可以请会弹琴的人照着和弦陪你。",
+      "没有琴也可以轻点拍子；笛子、二胡可以先练单音旋律。"
+    ],
+    "caution": "和弦不能直接当完整旋律。沙锤、海浪鼓等也不按 C、F、G、Am 弹奏。",
+    "refs": [
+      "triad",
+      "arp"
+    ]
+  },
+  {
+    "id": "volume",
+    "kind": "theory",
+    "title": "轻重和高低不一样",
+    "keys": [
+      "力度",
+      "强弱",
+      "音量",
+      "大声",
+      "小声",
+      "音高",
+      "高低"
+    ],
+    "intro": "高低是声音的音高；轻重是音量。轻声也能唱高音，大声也能唱低音。",
+    "steps": [
+      "先选自己不用费力就能哼出的音。",
+      "把声音放轻一点，身体不用使劲。",
+      "如果刺耳、累了或不舒服，就停下来，换安静的活动。"
+    ],
+    "caution": "不追求大音量，不把乐器贴近耳边。音乐活动不替代诊断或治疗。",
+    "refs": [
+      "health"
+    ]
+  },
+  {
+    "id": "shaker",
+    "kind": "instrument",
+    "title": "沙锤 / 蛋沙锤",
+    "keys": [
+      "沙锤",
+      "沙蛋",
+      "蛋沙锤"
+    ],
+    "intro": "轻轻摇动会有沙沙声，可以陪你数拍。它不弹旋律或和弦。",
+    "steps": [
+      "坐稳，轻握沙锤，手腕保持舒服。",
+      "轻摇一下，再停一下，先听听音量。",
+      "慢数一二三四，每拍轻摇一下；觉得累就放下。"
+    ],
+    "caution": "不同沙锤音量不同。轻摇就好，不贴近耳朵；外壳破损时先停用。",
+    "refs": [
+      "shaker",
+      "health"
+    ]
+  },
+  {
+    "id": "ocean",
+    "kind": "instrument",
+    "title": "海浪鼓",
+    "keys": [
+      "海浪鼓",
+      "海洋鼓"
+    ],
+    "intro": "鼓里的小珠滚动，会产生像海浪一样的声音。适合探索轻重和留白。",
+    "steps": [
+      "双手托稳鼓框，放在身前，不举到耳边。",
+      "很小幅度地慢慢倾斜，让里面的小珠滚过去。",
+      "扶平停一停，再换个方向；不需要一直摇。"
+    ],
+    "caution": "动作小、声音轻。拿不稳时请身边人协助，不用力甩动。",
+    "refs": [
+      "ocean",
+      "health"
+    ]
+  },
+  {
+    "id": "rain",
+    "kind": "instrument",
+    "title": "雨声筒",
+    "keys": [
+      "雨声筒",
+      "雨棍",
+      "雨声棒"
+    ],
+    "intro": "筒里的颗粒慢慢落下，会发出像雨声的声音。适合听声音由响到静。",
+    "steps": [
+      "双手握稳雨声筒，先在身前放稳。",
+      "慢慢倾斜一端，让颗粒缓缓落下。",
+      "听声音自然结束，再慢慢换向；可以只试一次。"
+    ],
+    "caution": "不要对着耳朵快速翻动。较长或较重的器材，请别人一起扶稳。",
+    "refs": [
+      "rain",
+      "health"
+    ]
+  },
+  {
+    "id": "kalimba",
+    "kind": "instrument",
+    "title": "拇指琴",
+    "keys": [
+      "拇指琴",
+      "卡林巴",
+      "kalimba"
+    ],
+    "intro": "拇指轻拨金属音片，就能发出清亮的声音。先试一个音也可以。",
+    "steps": [
+      "双手轻托琴身，肩膀放松，不捏紧。",
+      "用一侧拇指轻拨一片音片，听它慢慢停下。",
+      "再用另一侧拇指试一个音，轮流轻拨；不用急着成曲。"
+    ],
+    "caution": "不同琴的音片排列和调音不同，按自己的说明书找音。手指不舒服就停。",
+    "refs": [
+      "kalimba",
+      "health"
+    ]
+  },
+  {
+    "id": "tongue",
+    "kind": "instrument",
+    "title": "钢舌鼓",
+    "keys": [
+      "钢舌鼓",
+      "舌鼓"
+    ],
+    "intro": "鼓面上的不同舌片可以发出不同音。可以先用配套软槌轻敲。",
+    "steps": [
+      "把鼓按说明书放稳，先拿好配套软槌。",
+      "轻敲一片舌片后让槌离开，听声音自然延续。",
+      "再选另一片，慢慢一下一下敲；留点空白也很好。"
+    ],
+    "caution": "各型号音位与调音不同，不保证含有这里所有和弦音。具体找音请看说明书。",
+    "refs": [
+      "tongue",
+      "health"
+    ]
+  },
+  {
+    "id": "bowl",
+    "kind": "instrument",
+    "title": "金属颂钵",
+    "keys": [
+      "颂钵",
+      "唱钵"
+    ],
+    "intro": "用合适的槌轻敲，会有持续一会儿的声音。这里仅体验发声，不做治疗。",
+    "steps": [
+      "按说明书把金属钵放在合适的软垫或垫圈上，先放稳。",
+      "用配套软槌轻敲一下钵的外侧，不连续重击。",
+      "听声音慢慢变小，不需要把音量追得很大。"
+    ],
+    "caution": "不要放在身体上或贴着耳朵敲。绕钵摩擦等动作，先请现场老师演示。",
+    "refs": [
+      "bowl",
+      "health"
+    ]
+  }
+];
+  const LEARNING_QUESTION = /是什么|什么是|什么意思|啥意思|区别|怎么|如何|教程|入门|教我|学习|科普|知识|有哪些|几拍|多久|注意|用法|用处|能干什么|做什么用|怎么来的|为什么选|为何/;
+  const HELP_REQUEST = /转人工|找人工|人工客服|人工服务|真人|工作人员|老师帮|请老师|人工帮/;
+  const CONFUSED = /没听懂|听不懂|看不懂|不明白|还是不会|不知道怎么|不会用|不会操作|弄不来|太难了|不懂怎么|不会数拍|看不明白|搞不懂/;
+  let lastUserQuestion='',confusionCount=0,helpQuestion='',helpCardText='',activeLesson=null,lessonStep=0,lessonKind='instrument',lessonSpeechActive=false;
+  // 学习内容仍进入四类白名单知识库，不依赖网络。
+  LESSONS.forEach(l=>KNOWLEDGE_BASE.push({id:'lesson-'+l.id,category:l.kind==='theory'?'乐理简易库':'器乐简易指南',keys:l.keys,text:l.intro,lessonId:l.id}));
+  const SCENES = {
+    forest:{label:'森林',mix:'森林 + 轻轻的风',guide:'想象树叶轻轻摇动。坐舒服一点，让肩膀歇一会儿。'},
+    rain:{label:'细雨',mix:'细雨 + 安静的屋檐',guide:'想象细雨轻落在窗边。不用做什么，安安静静坐一会儿。'},
+    stream:{label:'溪流',mix:'溪流 + 森林',guide:'想象小溪缓缓流过。放松双手，让呼吸保持自然。'},
+    wind:{label:'晚风',mix:'晚风 + 轻轻的树叶声',guide:'想象晚风轻轻吹过。把肩膀放松，给自己一点歇息。'},
+    low:{label:'低声轻伴',mix:'轻柔低声背景 + 晚风',guide:'想象远处轻轻的低声陪伴。不追求特别的效果，觉得舒服就好。'}
+  };
+  const MOODS = {
+    joy:{label:'轻快',title:'暖暖的小日子',atmosphere:'听起来，这份小开心很值得留下。我们轻轻哼出来。',chords:['C','F','G','C'],humming:'像散步一样，慢慢数一、二、三、四。用“啦”轻哼，句尾歇一下。',question:'今天哪一刻让你笑了？愿意用自己的话说一句吗？',summary:'平常的小开心，也能长成你的歌。',scene:'forest'},
+    memory:{label:'想念',title:'心里的旧时光',atmosphere:'这段回忆里有你的惦记。我们放慢一点，把它轻轻留下。',chords:['C','Am','F','G'],humming:'先用“嗯”慢慢哼。像轻声讲旧事，唱一句，停一停。',question:'那段回忆里，最难忘的一句话或一个画面是什么？',summary:'你记得的点点滴滴，都值得被温柔留下。',scene:'wind'},
+    low:{label:'想歇一歇',title:'给心情放个小假',atmosphere:'听到你有些累、心里有些沉。我在这里，陪你慢慢来。',chords:['Am','F','C','G'],humming:'声音轻一点，用“嗯”哼两声。累了就停，不用唱完。',question:'要不要用一句话，说说此刻最想放下的事？不想说也没关系。',summary:'今天不用勉强自己，愿意表达就很珍贵。',scene:'rain'},
+    calm:{label:'安静',title:'慢慢来的时光',atmosphere:'你想让心慢慢静下来。我们留一点空白，不着急。',chords:['C','F','C','G'],humming:'用舒服的声音，轻轻哼“嗯—嗯”。慢一点，每句后自然换气。',question:'此刻让你觉得安稳的，是一个地方，还是一句话？',summary:'一两声轻哼，也是留给自己的温柔时光。',scene:'stream'}
+  };
+  const CONTINUITY = /上次|之前|接着|沿用|原来那|那首|那段|以前写|继续|刚才|上一首|改成|改得|改一下|更轻快|更慢|慢一点|快一点|加一句|这个感觉/;
+  const ADVANCED = /转调|离调|复调|爵士|复杂编曲|高阶|高级技巧|循环换气|超吹|多指摇|即兴伴奏|和声分析|十二音|增七|减七|属七/;
+  const UNSUPPORTED = /吉他|小提琴|萨克斯|架子鼓|琵琶|唢呐|扬琴|大提琴|口风琴/;
+  const MEDICAL = /诊断|治病|治好|治疗|抑郁症|焦虑症|双相|药物|吃药|停药|减药|剂量|疗效/;
+  const CRISIS = /自杀|自残|不想活|结束生命|伤害自己|想死/;
+  const OFF_TOPIC = /量子|股票|基金|彩票|编程|代码|python|javascript|天气预报|菜谱|做饭|总统|宇宙|外星|数学|微积分/i;
+  const CONCEPTS = [['开心','快乐','轻快','公园','太阳','高兴'],['想念','老家','故乡','回忆','桂花','小院'],['累','烦','难过','低落','孤单','心事'],['安静','放松','晚风','睡前','慢','轻柔'],['笛子','竹笛'],['古筝'],['二胡'],['口琴']];
+
+  function node(tag, className, text) { const el=document.createElement(tag); if(className)el.className=className; if(text!==undefined)el.textContent=text; return el; }
+  function icon(name) { const svg=document.createElementNS('http://www.w3.org/2000/svg','svg'); svg.setAttribute('class','icon'); svg.setAttribute('aria-hidden','true'); const use=document.createElementNS('http://www.w3.org/2000/svg','use'); use.setAttribute('href','#i-'+name); svg.append(use); return svg; }
+  function toast(message) { clearTimeout(toastTimer); $('toast').textContent=message; if(guideActive){$('toast').hidden=true;return;}$('toast').hidden=false; toastTimer=setTimeout(()=>$('toast').hidden=true,4600); }
+  function validRecord(w) {
+    return w && w.ownerId===currentUser && typeof w.id==='string' && typeof w.title==='string' && typeof w.story==='string' && typeof w.request==='string' && typeof w.lyrics==='string' && typeof w.humming==='string' && typeof w.instrument==='string' && typeof w.feedback==='string' && Array.isArray(w.emotionTags) && Array.isArray(w.chords) && w.chords.length>=2 && w.chords.length<=4 && w.chords.every(c=>['C','G','F','Am'].includes(c)) && ['joy','memory','low','calm'].includes(w.mood) && ['forest','rain','stream','wind','low'].includes(w.scene) && Array.isArray(w.sections) && w.sections.length===6 && w.sections.every(s=>typeof s==='string') && Number.isFinite(w.createdAt);
+  }
+  function persist() {
+    try { localStorage.setItem(STORE_KEY,JSON.stringify(works)); persistenceOK=true; }
+    catch (_) { persistenceOK=false; }
+    updateStorageHint();
+    return persistenceOK;
+  }
+  function updateStorageHint() { $('storageHint').textContent=persistenceOK?'作品只保存在当前浏览器。语音为模拟，不会录音。':'浏览器存储不可用：作品仅留在当前页面，关闭后可能丢失。'; }
+  function setTrace(lines) { lastTrace=lines.join('\n'); $('retrievalTrace').textContent=lastTrace; }
+  function setScene(key) { const scene=SCENES[key]||SCENES.forest; document.querySelectorAll('[data-scene]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.scene===key))); $('sceneGuide').textContent=scene.guide; }
+  function featureVector(text) {
+    const vector=Array(104).fill(0);
+    const s=String(text).replace(/上次|之前|接着|沿用|作品|那个|继续|改一下|我想|一下|一点|请|吧|的/g,'').replace(/[^\u4e00-\u9fffA-Za-z0-9]/g,'').toLowerCase();
+    for(let i=0;i<s.length-1;i++){const hash=(s.charCodeAt(i)*31+s.charCodeAt(i+1))%96;vector[hash]+=1;}
+    CONCEPTS.forEach((terms,i)=>{if(terms.some(t=>s.includes(t)))vector[96+i]=5;});
+    return vector;
+  }
+  function cosine(a,b) { let dot=0,aa=0,bb=0; for(let i=0;i<a.length;i++){dot+=a[i]*b[i];aa+=a[i]*a[i];bb+=b[i]*b[i];} return aa&&bb?dot/Math.sqrt(aa*bb):0; }
+  function retrieveMemory(text, explicitId) {
+    const mine=works.filter(w=>w.ownerId===currentUser);
+    if(explicitId) return mine.find(w=>w.id===explicitId)||null;
+    if(!CONTINUITY.test(text) && !/我想写|我写了|一句是|“|「/.test(text))return null;
+    if(!mine.length)return null;
+    if(/上次|刚才|上一首/.test(text))return mine[0];
+    const q=featureVector(text);
+    const ranked=mine.map(w=>({w,score:cosine(q,featureVector(w.story+' '+w.request+' '+w.lyrics+' '+w.instrument))})).sort((a,b)=>b.score-a.score);
+    return ranked[0].score>=.22?ranked[0].w:mine[0];
+  }
+  function retrievePublic(text) { return KNOWLEDGE_BASE.map(k=>({doc:k,score:k.keys.reduce((n,key)=>n+(text.includes(key)?key.length:0),0)})).filter(k=>k.score>0).sort((a,b)=>b.score-a.score); }
+  function detectMood(text, fallback='calm') {
+    if(/不开心|不快乐|不高兴|低落|难过|伤心|孤单|孤独|委屈|心里.{0,4}沉|累|烦|乱乱|闷|哭/.test(text))return 'low';
+    if(/轻快|开心|快乐|高兴|愉快|太阳|晒|暖暖/.test(text))return 'joy';
+    if(/想念|怀念|老家|小时候|故乡|桂花|回忆|小院|老伴|父亲|母亲|童年|惦记/.test(text))return 'memory';
+    if(/安静|平静|放松|睡前|休息|舒缓|睡不着/.test(text))return 'calm';
+    return fallback;
+  }
+  function detectScene(text, fallback) { if(/下雨|细雨|雨声/.test(text))return 'rain';if(/溪流|小溪/.test(text))return 'stream';if(/晚风/.test(text))return 'wind';if(/森林|树叶/.test(text))return 'forest';if(/低频|低声/.test(text))return 'low';return fallback; }
+  function extractLyric(text) {
+    const quote=text.match(/[“「『]([^”」』]{1,80})[”」』]/);
+    if(quote)return quote[1].trim();
+    const phrase=text.match(/(?:加一句|写一句|一句是|歌词是|我想写|我写了|写的是|这句是)\s*[：:，,]?\s*(.{1,100})/);
+    return phrase?phrase[1].replace(/(?:[，,。]?(?:帮我.*|你觉得.*|可以吗.*|行吗.*|再.*押韵.*))$/,'').trim():'';
+  }
+  function replySections(atmosphere, chords, humming, lyric, scene, summary) { return [atmosphere,chords,humming,lyric,scene,summary]; }
+  function simpleReply(first,last='愿意的话，我们从一句心情慢慢聊起。') { return {creative:false,offerHelp:first===UNKNOWN,sections:replySections(first,'这次先不选和弦。','想哼时，轻轻哼两声就好。','想写时，说一句自己的心里话就好。','晚风。坐舒服，放松肩膀。（文字演示）',last)}; }
+
+  // 三个版本共用原和弦顺序；以下是可改选的练习建议，不把情绪与奏法绑定。
+  const ARRANGEMENTS = [
+    {id:'hold',name:'轻按后留白',type:'柱式和弦 · 几个音一起按',bpm:60,pattern:['一起按','延长','延长','延长'],hint:'第一拍一起轻按，声音留到第四拍结束；中间不重按。',reason:'动作少、留白多，适合先熟悉四拍。'},
+    {id:'flow',name:'一个音接一个音',type:'分解和弦 · 依次轻弹',bpm:64,pattern:['低音','中音','高音','中音'],hint:'把三个和弦音从低到高排好。依次弹低、中、高、中，每个音一拍。',reason:'声音依次出现，可以试着陪一句慢慢讲的故事。'},
+    {id:'pulse',name:'轻按两次',type:'柱式和弦 · 一起按两次',bpm:76,pattern:['一起按','延长','再按','延长'],hint:'第一拍一起轻按，留两拍；第三拍再轻按一次，也留两拍。',reason:'每小节两次轻按，可以试试更有脚步感的陪伴。'}
+  ];
+  function recommendedArrangement(mood){return mood==='joy'?'pulse':mood==='memory'?'flow':'hold';}
+  function arrangementFor(record){const a=ARRANGEMENTS.find(x=>x.id===record?.accompaniment?.id);if(!a)return null;return {...a,bpm:Number.isFinite(record.accompaniment.bpm)?Math.max(40,Math.min(100,record.accompaniment.bpm)):a.bpm};}
+  function accompanimentText(record){const a=arrangementFor(record);return a?record.chords.join(' → ')+'\n'+a.name+'；4/4 拍，每分钟 '+a.bpm+' 拍；每个和弦四拍。'+a.hint:record.chords.join(' → ');}
+  function attachAccompaniment(record,memory,text){
+    const old=arrangementFor(memory);record.accompaniment=old?{id:old.id,type:old.type,meter:'4/4',bpm:old.bpm,beatsPerChord:4,pattern:[...old.pattern]}:null;
+    record.recommendedAccompaniment=recommendedArrangement(record.mood);
+    if(record.accompaniment&&/慢一点|放慢|更慢/.test(text))record.accompaniment.bpm=Math.max(40,record.accompaniment.bpm-8);
+    if(record.accompaniment&&/快一点|更快/.test(text))record.accompaniment.bpm=Math.min(100,record.accompaniment.bpm+8);
+    record.sections[1]=accompanimentText(record);
+  }
+  function chooseAccompaniment(record,id){
+    const a=ARRANGEMENTS.find(x=>x.id===id);if(!a||!works.some(w=>w.id===record.id&&w.ownerId===currentUser))return false;
+    record.accompaniment={id:a.id,type:a.type,meter:'4/4',bpm:a.bpm,beatsPerChord:4,pattern:[...a.pattern]};
+    record.updatedAt=Date.now();record.sections[1]=accompanimentText(record);record.feedback='伴奏选择：'+a.name;
+    if(currentWork?.id===record.id)currentWork=record;
+    saveRecord(record);return true;
+  }
+  function arrangementPanel(record){
+    const panel=node('div','choice-panel');panel.setAttribute('aria-label','选择这份作品的伴奏版本');
+    panel.append(node('p','','同一组和弦，任选一种陪伴方式。四拍一组，下一次“一”换和弦。'));
+    const options=node('div','arrangement-options'),detail=node('div','arrangement-detail'),status=node('div','choice-status');status.setAttribute('role','status');
+    const buttons=[];
+    ARRANGEMENTS.forEach(a=>{const b=node('button','arrangement-choice');b.type='button';b.dataset.arrangement=a.id;b.setAttribute('aria-pressed',String(record.accompaniment?.id===a.id));b.append(node('strong','',a.name+(record.recommendedAccompaniment===a.id?' · 建议先试':'')),node('span','',a.type+' · 4/4 拍'),node('span','','每分钟 '+a.bpm+' 拍 · 每个和弦四拍'),node('small','',a.reason));b.addEventListener('click',()=>{if(!chooseAccompaniment(record,a.id)){status.textContent='这份作品已被清空，请重新创作。';return;}buttons.forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.arrangement===a.id)));show(a);status.textContent=persistenceOK?'已选“'+a.name+'”，并保存到这份作品。':'已选“'+a.name+'”；暂存本页，关闭后可能丢失。';if(guideActive&&!document.querySelector('dialog[open]'))setGuideStep('accompaniment',{text:status.textContent+' 请看下方四拍的动作。准备好后，点“下一步：试着哼”。'});requestAnimationFrame(()=>detail.scrollIntoView({block:'center',behavior:'instant'}));});buttons.push(b);options.append(b);});
+    function show(a){detail.replaceChildren();detail.hidden=!a;if(!a)return;detail.append(node('p','','已选：'+a.name+' · 每分钟 '+a.bpm+' 拍'));const grid=node('div','beat-grid');grid.setAttribute('aria-label','每一小节的四拍动作');a.pattern.forEach((x,i)=>{const cell=node('div','beat-cell');cell.append(node('b','',String(i+1)),node('span','',x));grid.append(cell);});detail.append(grid,node('p','',a.hint),node('p','','四拍结束，换下一个和弦，再重复同样的动作。'));const read=node('button','btn','读这个版本');read.type='button';read.addEventListener('click',()=>speakLearning(a.name+'。四四拍，每分钟'+a.bpm+'拍。'+a.hint+'四拍结束，换下一个和弦。'));const stop=node('button','btn btn-white','停止朗读');stop.type='button';stop.addEventListener('click',stopLearningSpeech);const spokenStatus=node('p','lesson-speech-status');spokenStatus.setAttribute('role','status');detail.append(read,stop,spokenStatus);}
+    show(arrangementFor(record));status.textContent=arrangementFor(record)?'已保留您的选择，可以随时换一种。':'还没有选择。建议只是起点，您喜欢哪种都可以。';
+    const more=node('button','btn btn-white','这些词什么意思？');more.type='button';more.addEventListener('click',()=>openLesson('progression'));
+    panel.append(options,detail,status,node('p','','按键盘演奏理解；没有琴也可先数拍、轻哼。具体按哪里，请老师带着试。'),more);
+    return panel;
+  }
+  function findLesson(text){
+    const specific=[['beat',/节奏.*速度|速度.*节奏|节拍.*节奏|节奏.*节拍/],['block',/柱式|块状和弦/],['broken',/分解|琶音/],['progression',/和弦进行|和弦走向|换和弦|和弦顺序/],['notes',/(?:C|G|F|Am)和弦|组成音|和弦音|简谱/],['duration',/音符|时值|几拍/],['rest',/休止|停顿|换气/],['tempo',/BPM|bpm|速度|每分钟|一分钟/]];
+    const match=specific.find(([,re])=>re.test(text));if(match)return LESSONS.find(l=>l.id===match[0]);
+    return LESSONS.map(l=>({l,score:l.keys.reduce((n,k)=>n+(text.toLowerCase().includes(k.toLowerCase())?k.length:0),0)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score)[0]?.l||null;
+  }
+  function learningReply(text,memory){
+    if(memory&&/上次|之前|刚才|上一首/.test(text)&&/伴奏|版本|速度|每分钟|拍子|节拍/.test(text)&&LEARNING_QUESTION.test(text)){
+      const a=arrangementFor(memory);setTrace(['① 优先命中当前用户作品：'+memory.title,'② 从已保存伴奏字段回答；学习问答不另存作品。']);
+      const r=simpleReply(a?'上次选的是“'+a.name+'”。4/4 拍，每分钟 '+a.bpm+' 拍，每个和弦四拍。':'这份作品还没有选伴奏版本。可以打开作品，选一种喜欢的方式。');r.sections[2]=a?a.hint:'打开“我的作品”，点“查看作品”，就能选伴奏。';r.lessonId='progression';return r;
+    }
+    if(/疗愈乐器|放松乐器|乐器有哪些|有哪些乐器|认识乐器|音乐活动乐器/.test(text)){
+      setTrace(['① 检索公共知识：器乐简易指南 / 乐器总览。','② 提供本地教程，不承诺疗效，不存为作品。']);const r=simpleReply('可以认识沙锤、海浪鼓、雨声筒、拇指琴、钢舌鼓和金属颂钵。它们可用于声音探索，不是治病工具。','点“认识乐器”，选一个，慢慢试第一步。');r.catalog='instrument';return r;
+    }
+    if(/基础乐理|乐理基础|乐理有哪些|学乐理/.test(text)){setTrace(['① 命中公共知识：基础乐理课程目录。','② 学习内容不存档为作品。']);const r=simpleReply('先认识拍子、节奏和速度，再试四拍、和弦、一起按与依次弹。一次学一点就够了。');r.catalog='theory';return r;}
+    const l=findLesson(text);if(!l)return null;
+    const question=LEARNING_QUESTION.test(text)||text.trim()===l.title||l.keys.some(k=>k===text.trim());
+    if(!question||/写首|写个|创作一|编个|哼个|帮我编|想写歌/.test(text))return null;
+    if(/(?:2|3|5|6|7|9|12)\/(?:4|8)|三四拍|二四拍|六八拍/.test(text))return null;
+    if(l.kind==='instrument'&&/价格|多少钱|型号|品牌|购买|调音|调弦|维修|保养|清洗|材质|几根|几个孔|定弦|音域|指法|几赫兹|频率/.test(text))return null;
+    if(/柱式/.test(text)&&/分解/.test(text)){setTrace(['① 命中公共知识：柱式 / 分解和弦。','② 不进入创作存档。']);const r=simpleReply('柱式：同一组音一起响。分解：同一组音依次响。和弦顺序可以不变，只换弹法。');r.sections[2]='比如四拍里：一起按并留四拍；也可低、中、高、中，每拍弹一个音。';r.lessonId='broken';return r;}
+    setTrace(['① '+(memory?'先检查个人作品，再查询基础知识。':'查询公共知识。'),'② 命中：'+(l.kind==='theory'?'乐理简易库':'器乐简易指南')+' / '+l.id,'③ 返回已核对知识与分步练习；不自动创建作品。']);
+    const r=simpleReply(l.intro,'点“带我学一遍”，一次看一步。没明白也可以请人帮忙。');r.sections[2]=l.steps[0];r.lessonId=l.id;return r;
+  }
+  function lessonSources(l){const box=$('lessonSources');box.replaceChildren();l.refs.forEach(id=>{const source=KNOWLEDGE_SOURCES[id];if(!source)return;const a=node('a','',source.name+'（联网打开）');a.href=source.url;a.target='_blank';a.rel='noopener noreferrer';const row=node('div');row.append(a);box.append(row);});}
+  function stopLearningSpeech(){lessonSpeechActive=false;stopSpeech();$('lessonSpeechStatus').textContent='朗读已停止。您可以继续看文字。';}
+  function speakLearning(text){lessonSpeechActive=true;speakGuide(text);}
+  function showCatalog(kind='instrument'){
+    stopLearningSpeech();activeLesson=null;lessonKind=kind;$('learnTitle').textContent='音乐小课堂';$('lessonCatalog').hidden=false;$('lessonDetail').hidden=true;
+    $('tabInstruments').setAttribute('aria-pressed',String(kind==='instrument'));$('tabTheory').setAttribute('aria-pressed',String(kind==='theory'));
+    $('catalogIntro').textContent=kind==='instrument'?'先选一种乐器，看看是什么，再学三个小动作。用于音乐活动，不承诺疗效。':'不背理论。先选一个想知道的，再跟着做三小步。';
+    const box=$('lessonList');box.replaceChildren();LESSONS.filter(l=>l.kind===kind).forEach(l=>{const b=node('button','lesson-card');b.type='button';b.append(node('strong','',l.title),node('span','',l.intro));b.addEventListener('click',()=>openLesson(l.id));box.append(b);});$('learnDialog').scrollTop=0;
+  }
+  function openCatalog(kind){showCatalog(kind);if(!$('learnDialog').open){$('learnDialog').showModal();guideModalOpened();}}
+  function openLesson(id){const l=LESSONS.find(x=>x.id===id);if(!l)return;stopLearningSpeech();activeLesson=l;lessonKind=l.kind;lessonStep=0;$('learnTitle').textContent=l.title;$('lessonCatalog').hidden=true;$('lessonDetail').hidden=false;$('lessonIntro').textContent=l.intro;$('lessonCaution').textContent=l.caution;lessonSources(l);renderLessonStep();$('learnDialog').scrollTop=0;if(!$('learnDialog').open){$('learnDialog').showModal();guideModalOpened();}}
+  function renderLessonStep(){if(!activeLesson)return;$('lessonStepLabel').textContent='第 '+(lessonStep+1)+' 步 / 共 '+activeLesson.steps.length+' 步';$('lessonStepText').textContent=activeLesson.steps[lessonStep];$('lessonPrevBtn').disabled=lessonStep===0;$('lessonNextBtn').textContent=lessonStep===activeLesson.steps.length-1?'学完啦，返回列表':'下一步';}
+  function moveLesson(direction){if(!activeLesson)return;stopLearningSpeech();if(direction>0&&lessonStep===activeLesson.steps.length-1){showCatalog(lessonKind);return;}lessonStep=Math.max(0,Math.min(activeLesson.steps.length-1,lessonStep+direction));renderLessonStep();$('lessonStepText').focus();}
+  function openHumanHelp(kind='页面操作不会用',context=''){
+    stopLearningSpeech();helpQuestion=lastUserQuestion;$('helpKind').value=kind;$('helpIssue').value=context.slice(0,300);$('includeQuestion').checked=false;$('includeQuestion').disabled=!helpQuestion;
+    $('helpQuestionPreview').textContent=helpQuestion?'只有勾选后，才会加入：'+helpQuestion:'暂时没有上一条问题。';$('humanForm').hidden=false;$('handoffResult').hidden=true;helpCardText='';$('handoffCard').textContent='';$('downloadHelpStatus').textContent='';
+    ['learnDialog','workDialog','lyricDialog'].forEach(id=>{if($(id).open)$(id).close();});$('humanDialog').showModal();guideModalOpened();
+  }
+  function buildHelpCard(){return '乐愈伴 · 本地求助卡\n状态：未发送，尚未接通人工\n\n我想请人帮忙：'+$('helpKind').value+'\n补充：'+($('helpIssue').value.trim()||'请带着我一步一步试。')+($('includeQuestion').checked&&helpQuestion?'\n刚才的问题：'+helpQuestion:'')+'\n\n这张卡由我自行出示或交给工作人员。';}
+  function prepareHelpCard(){helpCardText=buildHelpCard();$('handoffCard').textContent=helpCardText;$('humanForm').hidden=true;$('handoffResult').hidden=false;$('humanDialog').scrollTop=0;}
+  function downloadHelpCard(){if(!helpCardText)return;try{const url=URL.createObjectURL(new Blob([helpCardText],{type:'text/plain;charset=utf-8'}));const a=node('a');a.href=url;a.download='乐愈伴-求助卡.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);$('downloadHelpStatus').textContent='已发起下载。若没有下载成功，可直接出示上面的卡片。';}catch(_){$('downloadHelpStatus').textContent='暂时不能下载，可以直接把这张卡给身边的人看。';}}
+  function addLearningActions(result,wrap){
+    const row=node('div','learn-links');
+    if(result.lessonId){const b=node('button','btn','带我学一遍');b.type='button';b.addEventListener('click',()=>openLesson(result.lessonId));row.append(b);}
+    if(result.catalog){const b=node('button','btn',result.catalog==='instrument'?'认识乐器':'学基础乐理');b.type='button';b.addEventListener('click',()=>openCatalog(result.catalog));row.append(b);}
+    if(result.lyricGuide){const b=node('button','btn btn-primary','一步步写我的歌词');b.type='button';b.addEventListener('click',()=>{const w=works.find(x=>x.id===result.lyricWorkId&&x.ownerId===currentUser);if(w?.lyrics){editSavedLyrics(w.id);return;}if(w)currentWork=w;openLyricGuide(result.lyricMode||'new');});row.append(b);}
+    if(row.children.length)wrap.append(row);
+    if(result.offerHelp){const box=node('div','inline-help');box.append(node('p','','没关系，可以请身边的人或社区工作人员带着做。'));const b=node('button','btn human-btn','找人工帮忙');b.type='button';b.addEventListener('click',()=>openHumanHelp('AI 没有答明白'));box.append(b);wrap.append(box);}
+  }
+  function initLearning(){
+    $('humanBtn').addEventListener('click',()=>openHumanHelp());$('composerHumanBtn').addEventListener('click',()=>openHumanHelp());
+    $('instrumentsBtn').addEventListener('click',()=>openCatalog('instrument'));$('theoryBtn').addEventListener('click',()=>openCatalog('theory'));
+    $('tabInstruments').addEventListener('click',()=>showCatalog('instrument'));$('tabTheory').addEventListener('click',()=>showCatalog('theory'));
+    $('lessonBackBtn').addEventListener('click',()=>showCatalog(lessonKind));$('lessonPrevBtn').addEventListener('click',()=>moveLesson(-1));$('lessonNextBtn').addEventListener('click',()=>moveLesson(1));
+    $('lessonReadBtn').addEventListener('click',()=>{if(activeLesson)speakLearning('第'+(lessonStep+1)+'步。'+activeLesson.steps[lessonStep]);});$('lessonStopBtn').addEventListener('click',stopLearningSpeech);
+    $('lessonHumanBtn').addEventListener('click',()=>openHumanHelp(activeLesson?.kind==='theory'?'伴奏和数拍想请老师教':'乐器想请老师教',activeLesson?'我正在学“'+activeLesson.title+'”，想请人带着做。':''));
+    $('learnDialog').addEventListener('close',()=>{stopLearningSpeech();guideModalClosed();});
+    $('humanForm').addEventListener('submit',e=>{e.preventDefault();prepareHelpCard();});$('downloadHelpBtn').addEventListener('click',downloadHelpCard);$('editHelpBtn').addEventListener('click',()=>{$('humanForm').hidden=false;$('handoffResult').hidden=true;});
+    $('helpIssue').addEventListener('input',()=>{helpCardText='';$('handoffCard').textContent='';});
+  }
+
+  // 本地歌词共创状态：先收集故事和要求，生成后自动存档，修改后再次保存。
+  let lyricState={step:0,mode:'new',theme:'日常的小开心',story:'',request:'',keyLine:'',form:'4',style:'口语一点',song:'',oldLyrics:'',draft:'',savedId:null};
+  function lyricIntent(text){return /喜欢.{0,6}歌.{0,10}改|用.{0,8}故事.{0,8}替换|把.{0,10}故事.{0,6}写成歌|歌词.{0,5}不会写|不会写.{0,4}歌词|不知道.{0,6}写.{0,4}歌词|歌词.{0,4}怎么写|怎么写.{0,4}歌词|帮我写.{0,4}歌词|生成.{0,6}歌词|专属歌词|改编.{0,6}歌词|改写.{0,6}歌词|替换.{0,6}歌词|改歌词|歌词共创|写歌词|写一首歌/.test(text);}
+  function lyricIntroReply(text){const rewrite=/改编|改写|替换|改歌词|喜欢的歌/.test(text);const r=simpleReply(rewrite?'可以，我们用你的故事写一版新词。先记下喜欢的歌名，再说说你最想唱的事。':'我们一步一步来：选个主题，说说自己的故事，再选想要几句歌词。','写出来后会自动存档。您可以一句一句改，再保存修改。');r.sections[3]='可以从“今天发生了什么”“我最惦记谁”“我想对谁说句话”里选一个。';r.lyricGuide=true;r.lyricMode=rewrite?'rewrite':'new';return r;}
+  function openLyricGuide(mode='new'){
+    stopLearningSpeech();lyricState={step:0,mode,theme:'日常的小开心',story:currentWork?.story||'',request:'',keyLine:'',form:'4',style:'口语一点',song:'',oldLyrics:'',draft:'',savedId:currentWork?.id||null};
+    $('lyricMode').value=mode;$('lyricTheme').value=lyricState.theme;$('lyricStory').value=lyricState.story;$('lyricRequest').value='';$('lyricKeyLine').value='';$('lyricForm').value='4';$('lyricStyle').value='口语一点';$('favoriteSong').value='';$('oldLyrics').value='';$('lyricDraft').value='';$('lyricStatus').textContent='';
+    renderLyricStep();$('lyricDialog').showModal();guideModalOpened();
+  }
+  function collectLyricFields(){lyricState.mode=$('lyricMode').value;lyricState.theme=$('lyricTheme').value;lyricState.story=$('lyricStory').value.trim();lyricState.request=$('lyricRequest').value.trim();lyricState.keyLine=$('lyricKeyLine').value.trim();lyricState.form=$('lyricForm').value;lyricState.style=$('lyricStyle').value;lyricState.song=$('favoriteSong').value.trim();lyricState.oldLyrics=$('oldLyrics').value.trim();}
+  function renderLyricStep(){
+    const titles=['先选一个主题','讲讲自己的故事','选一种歌词样子','读一读，改一改'];$('lyricStepLabel').textContent='第 '+(lyricState.step+1)+' 步 / 共 4 步 · '+titles[lyricState.step];
+    for(let i=0;i<4;i++)$('lyricStage'+i).hidden=i!==lyricState.step;
+    $('rewriteFields').hidden=lyricState.mode!=='rewrite';$('lyricPreviousBtn').disabled=lyricState.step===0;$('lyricNextBtn').hidden=lyricState.step===3;$('lyricNextBtn').textContent=lyricState.step===2?'生成我的歌词草稿':'下一步';
+    $('lyricPrompt').textContent=['不用想得很大。一次散步、一个人、一句想说的话，都可以。','用自己的话说就好。发生了什么？最记得哪个画面？有什么感受？','可以选四句短词，或八句两段。想押韵、保留哪句话，也可以说。','草稿已自动整理。可在框里逐句改，改好后点“保存修改”。'][lyricState.step];$('lyricDialog').scrollTop=0;
+  }
+  function nextLyricStep(){
+    collectLyricFields();$('lyricStatus').textContent='';
+    if(lyricState.step===1&&!lyricState.story){$('lyricStatus').textContent='说一句自己的故事就可以，比如“今天在公园看见一朵花”。';$('lyricStory').focus();return;}
+    if(CRISIS.test(lyricState.story+' '+lyricState.request)||MEDICAL.test(lyricState.request)){$('lyricStatus').textContent='这类困扰需要身边可信的人或专业人员陪您处理。这里的歌词只用于表达与陪伴。';return;}
+    if(lyricState.step===2&&lyricState.form==='follow'&&!lyricState.oldLyrics.trim()){$('lyricStatus').textContent='沿用分行需要先提供一小段旧词。也可以改选“四句短词”或“八句两段”。';return;}
+    if(lyricState.step===2){lyricState.draft=makePersonalLyrics(lyricState);$('lyricDraft').value=lyricState.draft;renderLyricExplanation();}
+    lyricState.step=Math.min(3,lyricState.step+1);renderLyricStep();if(lyricState.step===3)saveLyricDraft(true);
+  }
+  function makePersonalLyrics(state){
+    // 故事原句是事实来源；只加入表达性的连接句，不杜撰人物、事件或原歌歌词。
+    const parts=state.story.split(/[。！？!?；;\n，,]+/).map(x=>x.trim()).filter(Boolean);
+    const short=state.style==='句子短一点';
+    const facts=short?parts.flatMap(x=>x.length>26?x.split(/[、：:]/):[x]):parts;
+    const wantsRhyme=/押韵/.test(state.request)&&!/(不用|不要|不必|不想|不强求)押韵/.test(state.request);
+    const refrain=state.keyLine||(wantsRhyme?'把心里的话，轻轻唱吧':'把这份心情，轻轻唱给自己');
+    const a=facts[0]||state.story,b=facts[1]||'这些话，我想慢慢说',c=facts[2]||'想到这里，就轻轻哼两声';
+    if(state.form==='follow'&&state.oldLyrics){const original=state.oldLyrics.split(/\n+/).map(x=>x.trim()).filter(Boolean).slice(0,12);const pool=[...facts,...(state.keyLine?[state.keyLine]:[]),'这些话，我想慢慢说','用自己的话，唱自己的歌','不着急，慢慢唱',refrain];const mapping=new Map();const unique=[...new Set(original)];let i=0;return original.map(line=>{if(!mapping.has(line)){mapping.set(line,state.keyLine&&i===unique.length-1?state.keyLine:pool[i%pool.length]);i++;}return mapping.get(line);}).join('\n');}
+    if(state.form==='8')return [a,b,c,facts[3]||'一件小事，也值得记住',refrain,facts[4]||'用自己的话，唱自己的歌','不着急，慢慢唱',refrain].join('\n');
+    return [a,b,c,refrain].join('\n');
+  }
+  function renderLyricExplanation(){
+    const form=lyricState.form==='follow'?'沿用旧词分行和重复句':lyricState.form==='8'?'八句两段':'四句短词';
+    $('lyricWhy').textContent='主题：“'+lyricState.theme+'”。选取故事中的几句，整理为'+form+'。'+(lyricState.keyLine?'保留您指定的句子。':'');
+    $('lyricRequirementNote').textContent=(lyricState.request?'您的要求：'+lyricState.request+'。其他细节可在草稿里改。':'这是可修改的草稿，按自己的说话习惯改就好。')+(lyricState.mode==='rewrite'?'新词尚未与原曲逐字对齐，请边唱边改。':'');
+    $('lyricSaveBtn').textContent=lyricState.savedId?'保存修改':'保存这份歌词';
+  }
+  function saveLyricDraft(automatic=false){
+    const draft=$('lyricDraft').value.trim();if(!draft){$('lyricStatus').textContent='先留下一句词，再保存也不迟。';return;}
+    if(CRISIS.test(draft)){$('lyricStatus').textContent='听到这些话，我很在意您的安全。请先找可信的人陪着您；眼下有危险时，请立即联系当地急救或前往急诊。';return;}
+    let record=works.find(w=>w.id===lyricState.savedId&&w.ownerId===currentUser);
+    if(!record){const result=respond('我想创作歌词，'+lyricState.story);if(!result.creative){$('lyricStatus').textContent='这个故事暂时无法整理成作品，请换成音乐活动或日常回忆试试。';return;}record=result.record;record.title=(lyricState.mode==='rewrite'?'我的故事新词':'我的专属歌词')+' · '+lyricState.theme;}
+    record.story=lyricState.story;record.lyrics=draft;record.lyricPlan={mode:lyricState.mode,theme:lyricState.theme,request:lyricState.request,form:lyricState.form,style:lyricState.style,keyLine:lyricState.keyLine,referenceSong:lyricState.song,referenceLyrics:lyricState.oldLyrics};
+    record.sections[3]='已经留下您的歌词草稿：\n'+draft+'\n愿意的话，轻轻试唱，再改一两个字。';record.updatedAt=Date.now();
+    const saved=saveRecord(record);currentWork=record;lyricState.savedId=record.id;lyricState.draft=draft;$('saveBtn').disabled=false;$('lyricSaveBtn').textContent='保存修改';$('lyricStatus').textContent=saved?(automatic?'歌词草稿已自动保存。可以继续改，改好后点“保存修改”。':'歌词已保存到“我的作品”。还可以继续改。'):'歌词已留在本页；浏览器不能持久保存，关闭后可能丢失。';
+  }
+  function editSavedLyrics(id){const w=works.find(x=>x.id===id&&x.ownerId===currentUser);if(!w)return;if($('workDialog').open)$('workDialog').close();currentWork=w;openLyricGuide(w.lyricPlan?.mode||'new');lyricState={...lyricState,...(w.lyricPlan||{}),story:w.story,song:w.lyricPlan?.referenceSong||'',oldLyrics:w.lyricPlan?.referenceLyrics||'',draft:w.lyrics,savedId:w.id,step:3};$('lyricTheme').value=lyricState.theme;$('lyricStory').value=w.story;$('lyricRequest').value=lyricState.request;$('lyricKeyLine').value=lyricState.keyLine;$('lyricForm').value=lyricState.form;$('lyricStyle').value=lyricState.style;$('favoriteSong').value=lyricState.song;$('oldLyrics').value=lyricState.oldLyrics;$('lyricDraft').value=w.lyrics;renderLyricExplanation();renderLyricStep();}
+  function initLyrics(){
+    $('lyricsBtn').addEventListener('click',()=>openLyricGuide());$('lyricMode').addEventListener('change',()=>{collectLyricFields();renderLyricStep();});
+    $('lyricNextBtn').addEventListener('click',nextLyricStep);$('lyricPreviousBtn').addEventListener('click',()=>{if(lyricState.step===3)lyricState.draft=$('lyricDraft').value;collectLyricFields();lyricState.step=Math.max(0,lyricState.step-1);renderLyricStep();});
+    $('lyricSaveBtn').addEventListener('click',()=>saveLyricDraft(false));$('lyricReadBtn').addEventListener('click',()=>speakLearning($('lyricDraft').value));$('lyricStopBtn').addEventListener('click',stopLearningSpeech);
+    $('lyricHelpBtn').addEventListener('click',()=>openHumanHelp('AI 没有答明白','我想请人帮我把自己的故事写成歌词。'));$('lyricGuideReadBtn').addEventListener('click',()=>speakLearning($('lyricPrompt').textContent));
+    $('lyricDialog').addEventListener('close',()=>{stopLearningSpeech();guideModalClosed();});
+  }
+
+  function respond(text, explicitId) {
+    const historyRequest=/上次|之前|接着|沿用|原来那|那首|那段|以前写|继续|刚才|上一首/.test(text)||Boolean(explicitId);
+    const continuation=historyRequest||(works.length>0&&CONTINUITY.test(text));
+    // 清空、医学边界与高阶请求先于生成，不能被历史作品绕过。
+    if(CRISIS.test(text)){setTrace(['安全边界：暂不进入音乐创作。','不存档这次敏感输入。']);return simpleReply('听到你现在很难受，我很在意你此刻的安全。请先找可信的人陪着你，远离可能伤害自己的东西。','如果眼下有危险，请立即联系当地急救或前往急诊。');}
+    if(MEDICAL.test(text)){setTrace(['能力边界：不做诊断、治疗或用药建议。','本次不自动存档。']);return simpleReply('我可以陪你放松、聊心情，但不能判断疾病或指导用药。这些事请和医生聊聊。','如果低落持续了一段时间，也可以和家人聊聊，让人陪着你。');}
+    if(HELP_REQUEST.test(text)){setTrace(['明确人工求助意图：打开本地求助卡，不声称已接通。']);return {...simpleReply('可以，请点“找人工帮忙”。这里先准备一张求助卡，给身边的人或社区工作人员看。'),offerHelp:true,openHuman:true};}
+    if(lyricIntent(text)){setTrace(['命中歌词共创：先收集主题、个人故事与形式要求。','用户生成草稿后自动存档，可编辑并再次保存。']);const r=lyricIntroReply(text);const remembered=retrieveMemory(text,explicitId);if(remembered)r.lyricWorkId=remembered.id;return r;}
+    if(CONFUSED.test(text)){confusionCount++;setTrace(['识别到操作困惑，第 '+confusionCount+' 次。','不把困惑当成歌词，不创建作品；给出分步和人工帮助入口。']);return {...simpleReply(confusionCount>1?'没关系，我们可以请人陪着操作。请点下面的“找人工帮忙”。':'我们一次只做一步。您可以点“开启语音引导”；也可以点下面的“找人工帮忙”。'),offerHelp:true,lessonId:/数拍|拍子/.test(text)?'meter':null};}
+    confusionCount=0;
+    const lessonMemory=historyRequest?retrieveMemory(text,explicitId):null;
+    const knownChordNames=text.match(/[A-G](?:#|b)?(?:maj7|m7|7|m)?(?=和弦)/g)||[];
+    if(knownChordNames.some(c=>!['C','G','F','Am'].includes(c))){setTrace(['仅覆盖 C、G、F、Am；没有扩展和弦的知识。']);return simpleReply(UNKNOWN);}
+    const lesson=learningReply(text,lessonMemory);
+    if(lesson&&!/转调|复杂编曲|调音|调弦|维修|泛音|爵士|循环换气/.test(text)&&!UNSUPPORTED.test(text))return lesson;
+    if(ADVANCED.test(text)){setTrace(['能力边界：识别到高阶技巧或复杂音乐要求。','仅提供零基础提示，不生成复杂内容。']);return {...simpleReply('这部分比较进阶，我这里只陪你做简单的小调。需要时，可以请社区老师当面教你。','愿意的话，我们先从轻轻哼一句开始。'),offerHelp:true};}
+    if(OFF_TOPIC.test(text)||UNSUPPORTED.test(text)){setTrace(['个人记忆：未用于回答库外知识。','公共知识库：没有覆盖这个问题。','结果：固定兜底，不补写知识、不存档。']);return simpleReply(UNKNOWN);}
+    const hits=retrievePublic(text);
+    const isPlainLyric=Boolean(currentWork)&&text.length<=80&&!CONTINUITY.test(text)&&!/[?？]|怎么|什么|如何|吗|哪里|在哪|谁|多少|几根|你好|您好|谢谢|帮助|保存|试听|播放|语音|清空|不要|不想|今天|最近|心情|想念|写歌|写首|创作|小调|轻快|慢一点|快一点|感觉很好|满意|喜欢/.test(text)&&!hits.some(h=>['器乐简易指南','乐理简易库','操作答疑库'].includes(h.doc.category));
+    const memory=retrieveMemory(text,explicitId||(isPlainLyric?currentWork.id:null));
+    const trace=[continuation||memory?'① 优先检索当前用户的个人作品。':'① 本次是新话题，检索公共知识。'];
+    if(memory)trace.push('② 命中个人作品：'+memory.title+'。保留原故事、词句与乐器偏好。');
+    else if(continuation)trace.push('② 暂无可用个人作品；继续检索公共知识。');
+    const operation=hits.find(h=>h.doc.category==='操作答疑库');
+    const instrument=hits.find(h=>h.doc.category==='器乐简易指南');
+    const theory=hits.find(h=>h.doc.category==='乐理简易库');
+    const wantsCreation=/写|编创|创作|小调|心情|唱出来|回忆|想念|开心|难过|轻快|哼个/.test(text)||Boolean(memory);
+    if(operation&&!instrument&&!/写|编创|创作|小调|心情|唱出来|回忆|想念|开心|难过|轻快|哼个|改|加一句|沿用/.test(text)){trace.push('③ 命中：操作答疑库 / '+operation.doc.id);setTrace(trace);return simpleReply(operation.doc.text,'每一步都可以慢慢来，我陪着你。');}
+    if(instrument&&/多少钱|价格|型号|品牌|购买|调音|调弦|维修|保养|清洗|材质|多少|几根|几个孔|定弦|音域|指法|气震音|泛音/.test(text)){trace.push('③ 虽然识别了乐器，但库内没有这项具体知识；不延伸编造。');setTrace(trace);return simpleReply(UNKNOWN);}
+    if(instrument&&!wantsCreation){trace.push('③ 命中：器乐简易指南 / '+instrument.doc.id);setTrace(trace);return simpleReply(instrument.doc.text,'先试一小步就很好，不用急着学会一整首。');}
+    if(theory&&/(?:2|3|5|6|7|9|12)\/(?:4|8)|三四拍|二四拍|六八拍/.test(text)){setTrace(['该拍号暂未覆盖，创作示例仅用 4/4 拍。']);return simpleReply(UNKNOWN);}
+    if(theory&&!wantsCreation&&!continuation){trace.push('③ 命中：乐理简易库 / '+theory.doc.id);setTrace(trace);return simpleReply(theory.doc.text,'不用记术语，按自己舒服的节奏试试。');}
+    if(continuation&&!memory){
+      trace.push('③ 历史缺失：不假装记得上次内容，也不凭空创建旧作。');setTrace(trace);
+      return simpleReply('这里还没有找到你之前的作品。愿意说一句上次的心情，或贴一句原来的词吗？','你说一点就好，我们一起慢慢接上。');
+    }
+    const creationHits=hits.filter(h=>h.doc.category==='音乐疗愈创作引导库');
+    if(!memory&&!creationHits.length){trace.push('② 公共知识无匹配；使用固定兜底。');setTrace(trace);return simpleReply(UNKNOWN);}
+    const mood=detectMood(text,memory?memory.mood:'calm');
+    const config=MOODS[mood];
+    const scene=detectScene(text,memory?memory.scene:config.scene);
+    const lyric=extractLyric(text)||(isPlainLyric?text:'');
+    const lyrics=lyric?(memory&&memory.lyrics&&!memory.lyrics.includes(lyric)?memory.lyrics+'\n'+lyric:lyric):(memory?memory.lyrics:'');
+    const requestedInstrument=instrument?instrument.doc.keys[0]:(memory?memory.instrument:'');
+    const preserveChords=memory&&!/换.{0,4}和弦|改.{0,4}和弦/.test(text);
+    const chords=preserveChords?[...memory.chords]:[...config.chords];
+    let atmosphere=config.atmosphere;
+    if(memory)atmosphere='找到《'+memory.title+'》啦。'+(/轻快/.test(text)?'保留原来的词和调子，轻轻唱得活泼一点。':/慢/.test(text)?'沿用原来的感觉，这次慢一点唱。':'我们沿着你的故事，继续添一点。');
+    let humming=memory?memory.humming:config.humming;
+    if(/慢一点|更慢|放慢/.test(text))humming='沿用原来的调子，把每句放慢。轻轻哼，句尾多歇一会儿。';
+    if(/轻快|快一点/.test(text)&&memory)humming='用原来的调子，像轻松散步一样哼。句子短一点，不用赶。';
+    let question=lyric?'先留下你的原话：“'+lyric+'”。要不要轻轻哼一遍，听听哪里想停一停？':memory&&memory.lyrics?'上次留下了：“'+memory.lyrics.split('\n').slice(-1)[0]+'”。这次还想添哪一句？':config.question;
+    if(/押韵/.test(text))question+=' 想押韵时，可试试“家、花”这样的尾音；不勉强。';
+    if(/完整|整首|全首|直接帮我写/.test(text))question='我们先写一句，把你的感觉留下。你最想唱出的那句话是什么？';
+    let summary=config.summary;
+    if(/一直|持续|最近总|很多天|好几天|每天都/.test(text)&&mood==='low')summary='这些天辛苦了。也可以和家人聊聊，让他们陪你坐一会儿。';
+    if(instrument)humming+=' '+instrument.doc.text;
+    const sections=replySections(atmosphere,chords.join(' → '),humming,question,SCENES[scene].mix+'。'+SCENES[scene].guide+'（文字演示）',summary);
+    const now=Date.now();
+    const baseTitle=memory?memory.title.replace(/ · 续写$/,''):(/桂花/.test(text)?'小院里的桂花香':/公园|晒|太阳/.test(text)?'公园里的暖阳':config.title);
+    const record={id:uid(),ownerId:currentUser,createdAt:now,updatedAt:now,title:baseTitle+(memory?' · 续写':''),story:memory?memory.story:text,request:text,chords,humming,lyrics,instrument:requestedInstrument,feedback:/喜欢|感觉很好|满意|太快|太慢|再慢|轻快|慢一点/.test(text)?text:(memory?memory.feedback:''),emotionTags:[config.label],mood,scene,sections,parentId:memory?memory.id:null,source:memory?'personal':'public'};
+    trace.push(memory?(preserveChords?'③ 个人作品优先，复用原和弦；仅按本次要求调整。':'③ 个人作品优先，按要求换用预置简易和弦。'):'② 命中公共知识：'+[...new Set(creationHits.map(h=>h.doc.category))].join('、')+'；搭配预置简易和弦。');
+    if(memory?.lyricPlan)record.lyricPlan={...memory.lyricPlan};
+    attachAccompaniment(record,memory,text);
+    trace.push('④ 六段式引导；三个伴奏版本可选择，选择后写入当前作品。');
+    setTrace(trace);
+    return {creative:true,record,sections,scene,source:memory?'接续我的作品':'来自简易创作引导'};
+  }
+
+  function renderSections(sections) {
+    const box=node('div','reply');
+    sections.forEach((value,i)=>{
+      const section=node('section','reply-section');section.append(node('h3','',HEADINGS[i]));
+      if(i===1 && /^(C|G|F|Am)( → (C|G|F|Am)){1,3}$/.test(value)){
+        const row=node('div','chords');row.setAttribute('aria-label',value);
+        value.split(' → ').forEach((chord,j)=>{if(j)row.append(node('span','chord-arrow','→'));row.append(node('span','chord',chord));});section.append(row);
+      }else section.append(node('p','',value));
+      box.append(section);
+    });return box;
+  }
+  function renderUser(text,source) { const wrap=node('div','message user-message');wrap.append(node('span','message-label',source==='voice'?'我 · 模拟语音':'我'),node('div','user-bubble',text));$('messages').append(wrap); }
+  function addSystem(text) { $('messages').append(node('div','message system-message',text)); scrollChat(); }
+  function scrollChat(target) { requestAnimationFrame(()=>{ const area=$('chatScroll'); if(target)area.scrollTop=target.offsetTop-area.offsetTop-12;else area.scrollTop=area.scrollHeight; }); }
+  function saveRecord(record) {
+    const index=works.findIndex(w=>w.id===record.id&&w.ownerId===currentUser);
+    if(index>=0)works[index]=record;else works.unshift(record);
+    const saved=persist();renderWorks();return saved;
+  }
+  function renderAssistant(result) {
+    const wrap=node('article','message assistant-message');
+    const intro=node('div','assistant-intro');const avatar=node('span','tiny-avatar');avatar.append(icon('leaf'));intro.append(avatar,node('span','','乐愈伴'));wrap.append(intro,renderSections(result.sections));
+    if(result.creative){
+      const meta=node('div','reply-meta');meta.append(node('span','',persistenceOK?'✓ 已自动存到「我的作品」':'已留在当前页面，浏览器持久保存不可用'),node('span','','· '+result.source));wrap.append(meta);
+      const feedback=node('div','feedback-row');
+      [['这个感觉很好','这个感觉很好，继续保留。'],['想轻快一点','接着这个作品，改成轻快一点。']].forEach(([label,text])=>{const b=node('button','feedback-btn',label);b.type='button';b.addEventListener('click',()=>send(text,result.record.id));feedback.append(b);});wrap.append(feedback);
+    }
+    const read=node('button','read-btn');read.type='button';read.append(icon('speaker'),node('span','','读给我听'));read.addEventListener('click',()=>readReply(result,wrap));
+    const readTarget=result.creative?wrap.querySelectorAll('.reply-section')[2]:null;(readTarget||wrap).append(read);
+    if(result.creative)wrap.querySelectorAll('.reply-section')[1].append(arrangementPanel(result.record));
+    addLearningActions(result,wrap);
+    $('messages').append(wrap);guideReply=wrap;if(!guideActive)scrollChat(wrap);
+  }
+  // 语音辅导是操作状态机：只提示当前一步，不替用户提交、保存或删除。
+  const GUIDE_STEPS = {
+    input:{number:1,title:'说说心情',label:'第 1 步 · 点这里',text:'请点黄色圈出的“模拟语音输入”，先选一句心里话。也可以自己打字。'},
+    choose:{number:1,title:'选一句话',label:'点一句就可以',text:'请点下面的一句话，填进输入框。'},
+    send:{number:2,title:'点发送',label:'第 2 步 · 点发送',text:'文字填好啦。请点黄色圈出的“发送”，我们一起试着写。'},
+    accompaniment:{number:3,title:'选一种伴奏',label:'第 3 步 · 选一个',text:'和弦整理好啦。请在黄色框里选一种伴奏：轻按后留白、一个音接一个音，或轻按两次。每个版本都写着四拍怎么做。也可以先去试着哼。'},
+    humming:{number:4,title:'试着哼一句',label:'第 4 步 · 看这里',text:'灵感整理好啦。请看黄色框里的“哼唱小提示”。想听这句话，就点框里的“读给我听”，再自己轻轻哼。'},
+    save:{number:5,title:'留住作品',label:'第 5 步 · 点这里',text:'这份灵感已经自动存好了。您也可以点黄色圈出的“保存作品”，再确认一次。'},
+    works:{number:5,title:'接着写自己的歌',label:'想接着写，点这里',text:'作品已经保存啦。想添一句词，就点黄色圈出的“接着创作”。想歇一会儿，也可以点“结束引导”。'},
+    answer:{number:2,title:'看看这次回复',label:'请看这段话',text:'这次的回复在黄色框里。您可以慢慢看，或者点“读给我听”。想换个话题，在输入框里说一句就好。'}
+  };
+  const RATE_KEY='leyuban.guide-rate.v1';
+  const speechEngine=typeof globalThis.speechSynthesis!=='undefined'&&typeof globalThis.SpeechSynthesisUtterance==='function'?globalThis.speechSynthesis:null;
+  let guideActive=false,guideVoiceOn=false,guideStep='input',guideText='',guideTarget=null,guideReply=null;
+  let speechEpoch=0,activeUtterance=null,pendingSpeech=null,voiceLoadTimer=null,speechStartTimer=null,speechEndTimer=null,inputGuideTimer=null;
+  let speechRate=.82,inputGuideAnnounced=false;
+  try { const savedRate=Number(localStorage.getItem(RATE_KEY));if([.82,.68,.96].includes(savedRate))speechRate=savedRate; } catch (_) {}
+
+  function speechStatus(message,state='ready') {
+    $('speechStatusText').textContent=message;$('speechState').dataset.state=state;
+    document.querySelectorAll('.lesson-speech-status').forEach(el=>el.textContent=message);
+    $('voiceCoachStatus').textContent=message;$('lessonSpeechStatus').textContent=message;$('lyricSpeechStatus').textContent=message;
+  }
+  function stopSpeech() {
+    speechEpoch++;pendingSpeech=null;activeUtterance=null;
+    clearTimeout(voiceLoadTimer);clearTimeout(speechStartTimer);clearTimeout(speechEndTimer);
+    if(speechEngine){try{speechEngine.cancel();}catch(_){}}
+  }
+  function localChineseVoice() {
+    if(!speechEngine)return null;
+    try {
+      // 不使用云端语音，也不以英文声音代读中文。
+      const voices=speechEngine.getVoices().filter(v=>v.localService===true&&/^(zh(?:[-_](?:CN|SG|TW|Hans|Hant))?(?:[-_].*)?|cmn(?:[-_].*)?)$/i.test(v.lang));
+      return voices.find(v=>/^zh[-_]CN$/i.test(v.lang))||voices.find(v=>/^zh[-_]Hans/i.test(v.lang))||voices[0]||null;
+    } catch (_) { return null; }
+  }
+  function speechUnavailable(message='暂时没有中文声音，可以看大字提示。') {
+    stopSpeech();speechStatus(message,'unavailable');
+  }
+  function speakWithVoice(text,voice,epoch) {
+    if(epoch!==speechEpoch||(!lessonSpeechActive&&(!guideActive||!guideVoiceOn)))return;
+    clearTimeout(voiceLoadTimer);pendingSpeech=null;
+    let utterance;
+    try { utterance=new SpeechSynthesisUtterance(text);utterance.voice=voice;utterance.lang=voice.lang||'zh-CN';utterance.rate=speechRate;utterance.pitch=1;utterance.volume=1; }
+    catch (_) {speechUnavailable('暂时读不出声音，您可以照着大字提示继续。');return;}
+    activeUtterance=utterance;
+    utterance.onstart=()=>{if(epoch!==speechEpoch)return;clearTimeout(speechStartTimer);speechStatus('正在慢慢说给您听','speaking');};
+    utterance.onend=()=>{if(epoch!==speechEpoch)return;clearTimeout(speechStartTimer);clearTimeout(speechEndTimer);activeUtterance=null;speechStatus('说完啦。没听清可以点“再说一遍”。','ready');};
+    utterance.onerror=()=>{if(epoch!==speechEpoch)return;speechUnavailable('暂时读不出声音。您可以看大字提示，或点“再说一遍”重试。');};
+    speechStatus('准备说给您听…','loading');
+    speechStartTimer=setTimeout(()=>{if(epoch===speechEpoch)speechUnavailable('声音暂时没有启动。请看大字提示，或点“再说一遍”重试。');},7000);
+    speechEndTimer=setTimeout(()=>{if(epoch===speechEpoch)speechUnavailable('语音已暂停。您可以看大字提示继续。');},Math.max(20000,Math.min(90000,text.length*450)));
+    try {speechEngine.speak(utterance);}catch(_){speechUnavailable('暂时读不出声音，您可以照着大字提示继续。');}
+  }
+  function speakGuide(text=guideText) {
+    stopSpeech();
+    if(!guideActive&&!lessonSpeechActive)return;
+    if(!guideVoiceOn&&!lessonSpeechActive){speechStatus('声音已关闭，文字指引仍在。','muted');return;}
+    if(!speechEngine){speechUnavailable('这台设备暂时不能朗读，请跟着大字提示操作。');return;}
+    const epoch=speechEpoch,voice=localChineseVoice();
+    if(voice){speakWithVoice(text,voice,epoch);return;}
+    pendingSpeech={text,epoch};speechStatus('正在找设备里的中文声音…','loading');
+    voiceLoadTimer=setTimeout(()=>{if(epoch===speechEpoch&&pendingSpeech)speechUnavailable();},1600);
+  }
+  function syncGuideButtons() {
+    $('guideMuteBtn').textContent=guideVoiceOn?'关闭声音':'开启声音';$('guideMuteBtn').setAttribute('aria-pressed',String(!guideVoiceOn));
+    $('voiceCoachMute').textContent=guideVoiceOn?'关声音':'开声音';$('voiceCoachMute').setAttribute('aria-pressed',String(!guideVoiceOn));$('voiceCoachMute').setAttribute('aria-label',guideVoiceOn?'关闭引导声音':'开启引导声音');
+    $('guideCaption').setAttribute('aria-live',guideVoiceOn?'off':'polite');
+    $('voiceCoachCaption').setAttribute('aria-live',guideVoiceOn?'off':'polite');
+  }
+  function setGuideCaption(text) { guideText=text;$('guideCaption').textContent=text;$('voiceCoachCaption').textContent=text; }
+  function clearGuideTarget() {
+    if(!guideTarget)return;
+    guideTarget.classList.remove('guide-target');guideTarget.removeAttribute('data-guide-label');
+    const descriptions=(guideTarget.getAttribute('aria-describedby')||'').split(/\s+/).filter(v=>v&&v!=='guideCaption'&&v!=='voiceCoachCaption');
+    if(descriptions.length)guideTarget.setAttribute('aria-describedby',descriptions.join(' '));else guideTarget.removeAttribute('aria-describedby');
+    guideTarget=null;
+  }
+  function targetForGuide() {
+    if(guideStep==='choose')return $('firstVoiceChoice');
+    if(guideStep==='input')return $('voiceBtn');
+    if(guideStep==='send')return $('sendBtn');
+    if(guideStep==='accompaniment')return guideReply?guideReply.querySelectorAll('.reply-section')[1]:$('chatTitle');
+    if(guideStep==='humming')return guideReply?guideReply.querySelectorAll('.reply-section')[2]:$('chatTitle');
+    if(guideStep==='save')return $('saveBtn');
+    if(guideStep==='works')return $('worksList').querySelector('[data-resume-work]')||$('worksTitle');
+    return guideReply?guideReply.querySelector('.reply-section'):$('userInput');
+  }
+  function highlightGuideTarget() {
+    clearGuideTarget();if(!guideActive)return;
+    const target=targetForGuide();if(!target)return;
+    guideTarget=target;target.classList.add('guide-target');target.setAttribute('data-guide-label',GUIDE_STEPS[guideStep].label);
+    const captionId=guideStep==='choose'?'voiceCoachCaption':'guideCaption';
+    target.setAttribute('aria-describedby',((target.getAttribute('aria-describedby')||'')+' '+captionId).trim());
+  }
+  function syncGuideSpace() { if(guideActive)document.body.style.setProperty('--guide-clearance',($('coachDock').offsetHeight+44)+'px'); }
+  function locateGuideTarget(focus=true) {
+    if(!guideActive)return;highlightGuideTarget();const target=guideTarget;if(!target)return;
+    syncGuideSpace();
+    const reduced=globalThis.matchMedia&&globalThis.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    target.scrollIntoView({behavior:'instant',block:'center',inline:'nearest'});
+    if(focus){if(!target.matches('button,input,textarea,select,a[href]'))target.setAttribute('tabindex','-1');target.focus({preventScroll:true});}
+    // 固定指引条会占用屏幕底部；只调整页面和聊天滚动，避免遮住要点击的目标。
+    requestAnimationFrame(()=>{
+      if(!guideActive||!guideTarget||guideStep==='choose')return;
+      const rect=guideTarget.getBoundingClientRect(),dock=$('coachDock').getBoundingClientRect();
+      if(rect.height>dock.top-60)globalThis.scrollBy({top:rect.top-30,behavior:reduced?'instant':'smooth'});
+      else if(rect.bottom>dock.top-30)globalThis.scrollBy({top:rect.bottom-dock.top+46,behavior:reduced?'instant':'smooth'});
+    });
+  }
+  function setGuideStep(step,{speak=true,locate=false,text=null}={}) {
+    if(!guideActive)return;
+    clearTimeout(inputGuideTimer);guideStep=step;if(step==='input')inputGuideAnnounced=false;if(step==='send')inputGuideAnnounced=speak;const info=GUIDE_STEPS[step];
+    $('guideStepLabel').textContent='第 '+info.number+' 步 / 共 5 步 · '+info.title;
+    setGuideCaption(text||info.text);
+    $('guideNextBtn').textContent=step==='accompaniment'?'下一步：试着哼':step==='humming'?'下一步：存作品':step==='answer'?'继续说心情':'指给我看';
+    $('guideLocateBtn').textContent=['accompaniment','humming','answer'].includes(step)?'找到提示':'找到按钮';
+    $('guideLocateBtn').hidden=!['accompaniment','humming','answer'].includes(step);
+    $('guideLocateBtn').parentElement.classList.toggle('with-locate',!$('guideLocateBtn').hidden);
+    highlightGuideTarget();syncGuideSpace();if(locate)locateGuideTarget(false);
+    if(speak)speakGuide();else {stopSpeech();speechStatus(guideVoiceOn?'需要时，点“再说一遍”。':'声音已关闭，文字指引仍在。',guideVoiceOn?'ready':'muted');}
+  }
+  function startGuide(withVoice=true) {
+    guideActive=true;guideVoiceOn=withVoice;document.body.classList.add('guide-on');$('coachDock').hidden=false;
+    $('guideStartBtn').setAttribute('aria-pressed','true');$('guideStartLabel').textContent='重新带我走一遍';
+    $('guideWelcome').textContent='跟着黄色圈选，一次只做一步。随时可以重听或关闭声音。';syncGuideButtons();
+    setGuideStep($('userInput').value.trim()?'send':'input',{locate:true});
+  }
+  function endGuide() {
+    guideActive=false;guideVoiceOn=false;lessonSpeechActive=false;stopSpeech();clearTimeout(inputGuideTimer);clearGuideTarget();
+    document.body.classList.remove('guide-on');$('coachDock').hidden=true;$('guideStartBtn').setAttribute('aria-pressed','false');$('guideStartLabel').textContent='开启语音引导';
+    $('guideWelcome').textContent='需要时，再点“开启语音引导”，我就来陪您。';syncGuideButtons();speechStatus('引导已结束','off');
+  }
+  function toggleGuideVoice() { lessonSpeechActive=false;guideVoiceOn=!guideVoiceOn;syncGuideButtons();if(guideVoiceOn)speakGuide();else{stopSpeech();speechStatus('声音已关闭，文字指引仍在。','muted');} }
+  function guideAfterInput() {
+    clearTimeout(inputGuideTimer);if(!guideActive)return;
+    if(!$('userInput').value.trim()){if(guideStep==='send')setGuideStep('input',{speak:false});return;}
+    if(guideStep!=='choose'){
+      if(guideStep!=='send')setGuideStep('send',{speak:false});
+      if(!inputGuideAnnounced)inputGuideTimer=setTimeout(()=>{if(guideActive&&guideStep==='send'&&$('userInput').value.trim()){inputGuideAnnounced=true;speakGuide();}},1300);
+    }
+  }
+  function readReply(result,wrap) {
+    if(!guideActive){guideActive=true;guideVoiceOn=true;document.body.classList.add('guide-on');$('coachDock').hidden=false;$('guideStartBtn').setAttribute('aria-pressed','true');$('guideStartLabel').textContent='重新带我走一遍';syncGuideButtons();}
+    guideVoiceOn=true;syncGuideButtons();
+    guideReply=wrap;
+    const text=result.creative?'哼唱小提示。'+result.sections[2]+' 不用着急，按自己舒服的样子试一试。':result.sections[0];
+    setGuideStep(result.creative?'humming':'answer',{text,locate:true});
+  }
+  function saveCurrentWork() {
+    if(!currentWork){toast('先聊聊心情，创作后就可以保存啦。');if(guideActive)setGuideStep('input',{locate:true});return;}
+    const saved=saveRecord(currentWork);
+    toast(saved?'这份灵感已经保存在「我的作品」里啦。':'已留在当前页面；浏览器未允许持久保存。');
+    if(guideActive)setGuideStep('works',{locate:true,text:saved?null:'这份灵感暂时留在本页，关闭后可能丢失。想继续写，可以点黄色圈出的“接着创作”。'});
+  }
+  function guideModalOpened() {
+    lessonSpeechActive=false;document.body.classList.add('has-guide-modal');stopSpeech();clearTimeout(inputGuideTimer);
+    if(guideActive)speechStatus('先看弹窗里的说明。关闭弹窗后可继续引导。','ready');
+  }
+  function guideModalClosed() {
+    lessonSpeechActive=false;stopSpeech();
+    if(document.querySelector('dialog[open]'))return;
+    document.body.classList.remove('has-guide-modal');
+    if(!guideActive)return;
+    if(guideStep==='choose')setGuideStep($('userInput').value.trim()?'send':'input',{speak:false});else highlightGuideTarget();
+    syncGuideSpace();
+  }
+  function initGuide() {
+    $('speechRate').value=String(speechRate);
+    $('guideStartBtn').addEventListener('click',()=>startGuide(true));$('guideTextBtn').addEventListener('click',()=>startGuide(false));
+    $('guideEndBtn').addEventListener('click',endGuide);$('voiceCoachEnd').addEventListener('click',endGuide);
+    $('guideRepeatBtn').addEventListener('click',()=>{if(!guideVoiceOn){guideVoiceOn=true;syncGuideButtons();}speakGuide();});
+    $('voiceCoachRepeat').addEventListener('click',()=>{if(!guideVoiceOn){guideVoiceOn=true;syncGuideButtons();}speakGuide();});
+    $('guideMuteBtn').addEventListener('click',toggleGuideVoice);$('voiceCoachMute').addEventListener('click',toggleGuideVoice);
+    $('guideLocateBtn').addEventListener('click',()=>locateGuideTarget());
+    $('guideNextBtn').addEventListener('click',()=>{
+      if(guideStep==='accompaniment')setGuideStep('humming',{locate:true});
+      else if(guideStep==='humming'&&currentWork)setGuideStep('save',{locate:true,text:persistenceOK?null:'这份灵感暂时留在本页。您可以点黄色圈出的“保存作品”再试一次。'});
+      else if(guideStep==='answer')setGuideStep('input',{locate:true});else locateGuideTarget();
+    });
+    $('speechRate').addEventListener('change',()=>{const value=Number($('speechRate').value);speechRate=[.82,.68,.96].includes(value)?value:.82;try{localStorage.setItem(RATE_KEY,String(speechRate));}catch(_){}if(guideActive&&guideVoiceOn)speakGuide();});
+    document.querySelectorAll('dialog').forEach(d=>d.addEventListener('close',guideModalClosed));
+    if(speechEngine&&typeof speechEngine.addEventListener==='function')speechEngine.addEventListener('voiceschanged',()=>{const pending=pendingSpeech,voice=localChineseVoice();if(pending&&voice&&pending.epoch===speechEpoch)speakWithVoice(pending.text,voice,pending.epoch);});
+    if(typeof document.addEventListener==='function')document.addEventListener('visibilitychange',()=>{if(document.hidden){stopSpeech();clearTimeout(inputGuideTimer);if(guideActive)speechStatus('语音已暂停。回来后可点“再说一遍”。','ready');}});
+    if(typeof globalThis.addEventListener==='function'){globalThis.addEventListener('pagehide',stopSpeech);globalThis.addEventListener('resize',syncGuideSpace);}
+  }
+  let inputSource='typed';
+  function send(raw,explicitId=null) {
+    const text=String(raw).trim().slice(0,500);
+    if(!text){toast('想到什么就说一句吧，不着急。');$('userInput').focus();if(guideActive)setGuideStep('input',{text:'还没写内容也没关系。请点黄色圈出的“模拟语音输入”，先选一句话。',locate:true});return;}
+    if(/清空我的作品/.test(text)&&!/(不要|别|不想|先不|不许|如何|怎么|会不会)/.test(text)) {clearWorks();return;}
+    $('welcome').hidden=true;renderUser(text,inputSource);inputSource='typed';$('userInput').value='';updateCount();
+    lastUserQuestion=text;
+    const result=respond(text,explicitId);
+    currentWork=result.creative?result.record:null;$('saveBtn').disabled=!currentWork;
+    if(result.creative){saveRecord(result.record);setScene(result.scene);setTrace(lastTrace.split('\n').concat(persistenceOK?'⑤ 自动保存至当前用户本地记录。':'⑤ 存储受限，仅保留当前页面内存。'));}
+    renderAssistant(result);
+    if(guideActive)setGuideStep(result.creative?'accompaniment':'answer',{locate:true});
+    if(result.openHuman)openHumanHelp('AI 没有答明白');
+  }
+  function renderWorks() {
+    const box=$('worksList');box.replaceChildren();$('workCount').textContent=works.length;
+    if(!works.length){const empty=node('div','empty-works');const art=node('div','empty-art');art.append(icon('music'));empty.append(art,node('p','','等你留下第一段小调'),node('small','','聊聊心情，灵感会自动存到这里。'));box.append(empty);return;}
+    const list=node('div','work-list');
+    works.forEach(w=>{const item=node('article','work-item');item.append(node('h3','',w.title));const info=node('div','work-info');info.append(node('span','',w.emotionTags.join(' · ')),node('span','',new Date(w.createdAt).toLocaleDateString('zh-CN',{month:'2-digit',day:'2-digit'})));item.append(info);const actions=node('div','work-actions');const view=node('button','','查看作品');view.type='button';view.addEventListener('click',()=>openWork(w.id));const resume=node('button','','接着创作');resume.type='button';resume.setAttribute('data-resume-work',w.id);resume.addEventListener('click',()=>{send('接着这份作品，继续慢慢写。',w.id);$('userInput').focus({preventScroll:true});});actions.append(view,resume);item.append(actions);list.append(item);});box.append(list);
+  }
+  function openWork(id) {
+    const w=works.find(w=>w.id===id&&w.ownerId===currentUser);if(!w)return;
+    $('workDialogTitle').textContent=w.title;
+    const content=$('workDetail');content.replaceChildren();content.append(node('p','section-note','我的故事：'+w.story),renderSections(w.sections));content.append(arrangementPanel(w));
+    const meta=node('div','notice');meta.style.marginTop='16px';
+    meta.append(node('p','','歌词草稿：'+(w.lyrics||'还没写下词句，先留住这份心情。')),node('p','section-note','乐器偏好：'+(w.instrument||'还没选择')+' · 反馈：'+(w.feedback||'还没有')));content.append(meta);
+    if(w.lyrics){const edit=node('button','btn','继续修改歌词');edit.type='button';edit.addEventListener('click',()=>editSavedLyrics(w.id));content.append(edit);}
+    const resume=node('button','btn btn-primary','接着这份灵感写');resume.type='button';resume.style.marginTop='17px';resume.addEventListener('click',()=>{$('workDialog').close();send('接着这份作品，继续慢慢写。',w.id);});content.append(resume);$('workDialog').showModal();guideModalOpened();
+  }
+  function clearWorks() {
+    // 删除属于本地当前用户的作品；不触碰其他 localStorage 数据。
+    lastUserQuestion='';helpQuestion='';helpCardText='';confusionCount=0;lessonSpeechActive=false;lyricState={step:0,mode:'new',theme:'',story:'',draft:'',savedId:null};
+    ['helpIssue','lyricStory','lyricDraft','lyricKeyLine','favoriteSong','oldLyrics','lyricRequest'].forEach(id=>$(id).value='');$('includeQuestion').checked=false;$('handoffCard').textContent='';$('helpQuestionPreview').textContent='';$('handoffResult').hidden=true;['humanDialog','lyricDialog'].forEach(id=>{if($(id).open)$(id).close();});
+    works=[];currentWork=null;guideReply=null;stopSpeech();clearTimeout(inputGuideTimer);clearGuideTarget();
+    let removed=true;
+    try{localStorage.removeItem(STORE_KEY);}catch(_){removed=false;persistenceOK=false;}
+    $('messages').replaceChildren();$('welcome').hidden=false;$('userInput').value='';inputSource='typed';updateCount();$('saveBtn').disabled=true;renderWorks();
+    $('workDetail').replaceChildren();$('workDialogTitle').textContent='我的灵感';if($('workDialog').open)$('workDialog').close();
+    setTrace(['已清空当前用户作品、对话与创作上下文。','下一次续作请求不会引用已删除的作品。']);setScene('forest');updateStorageHint();
+    const text=removed?'已经清空你的作品啦。想重新开始时，我一直在这里。':'本页作品已清空，但浏览器阻止了存储删除。请在浏览器设置中清除此页面的数据。';
+    addSystem(text);toast(text);if(guideActive)setGuideStep('input',{text:text+' 想重新开始，请点黄色圈出的“模拟语音输入”。',locate:true});
+  }
+  function updateCount() { $('charCount').textContent=$('userInput').value.length+' / 500'; }
+  function setFont(large) { document.body.classList.toggle('large-type',large);$('fontBtn').textContent=large?'字号：特大':'字号：大';$('fontBtn').setAttribute('aria-pressed',String(large));$('fontBtn').setAttribute('aria-label',large?'换回大字':'换成特大字');try{localStorage.setItem(FONT_KEY,String(large));}catch(_){}if(guideActive)syncGuideSpace(); }
+  $('chatForm').addEventListener('submit',e=>{e.preventDefault();send($('userInput').value);});
+  $('userInput').addEventListener('input',e=>{inputSource='typed';updateCount();if(!e.isComposing)guideAfterInput();});
+  $('userInput').addEventListener('compositionend',guideAfterInput);
+  $('userInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)&&!e.isComposing){e.preventDefault();send($('userInput').value);}});
+  $('voiceBtn').addEventListener('click',()=>{$('voiceDialog').showModal();guideModalOpened();if(guideActive)setGuideStep('choose');});
+  $('helpBtn').addEventListener('click',()=>{$('retrievalTrace').textContent=lastTrace;$('helpDialog').showModal();guideModalOpened();});
+  $('saveBtn').addEventListener('click',saveCurrentWork);
+  $('clearBtn').addEventListener('click',clearWorks);
+  $('fontBtn').addEventListener('click',()=>setFont(!document.body.classList.contains('large-type')));
+  document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>$(b.dataset.close).close()));
+  document.querySelectorAll('[data-voice]').forEach(b=>b.addEventListener('click',()=>{$('userInput').value=b.dataset.voice;inputSource='voice';updateCount();$('voiceDialog').close();document.body.classList.remove('has-guide-modal');$('userInput').focus();toast('模拟文字已填好。想改一改也可以，再点「发送」。');if(guideActive)setGuideStep('send',{locate:true});}));
+  document.querySelectorAll('[data-starter]').forEach(b=>b.addEventListener('click',()=>send(b.dataset.starter)));
+  document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>setScene(b.dataset.scene)));
+  $('promptContent').textContent=SYSTEM_PROMPT;
+  try{setFont(localStorage.getItem(FONT_KEY)==='true');}catch(_){}
+  renderWorks();updateStorageHint();initGuide();initLearning();initLyrics();if(persistenceWarning)toast(persistenceWarning);
+  </script>
+</body>
+</html>
